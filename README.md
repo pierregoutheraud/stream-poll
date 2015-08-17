@@ -1,1 +1,1 @@
-# stream-poll
+# react-blank-project

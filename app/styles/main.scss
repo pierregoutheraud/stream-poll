@@ -1,0 +1,9 @@
+// mixins
+@import "mixins/colors";
+
+// import Colors, Fonts and Variables
+@import "modules/colors";
+@import "modules/variables";
+
+// import Partials
+@import "partials/core";
