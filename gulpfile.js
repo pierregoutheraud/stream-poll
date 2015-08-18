@@ -11,7 +11,7 @@ var gulp = require('gulp'),
 var environment = $.util.env.type || 'dev';
 var style = $.util.env.style || 'games';
 var port = $.util.env.port || 9999;
-var portLivereload = 35730;
+var portLivereload = 35735;
 
 console.log('Environment: ' + environment);
 console.log('Style: ' + style);

@@ -3,8 +3,36 @@ import CONFIG from 'config/config.js';
 
 class Api {
 
-  getComments(video_id) {
-    return this.get('/comments/' + video_id);
+  getPoll (poll_id) {
+    return {
+      question: "Que dois je manger aujourd'hui ?",
+      options: ['Pates','Steak','Tarte aux pommes','Kebab']
+    };
+    // return this.get('/poll/' + poll_id);
+  }
+
+  getPollResults (poll_id) {
+    return {
+      question: "Que dois je manger aujourd'hui ?",
+      options: [
+        {
+          value: 'Pates',
+          votes: 23
+        },
+        {
+          value: 'Steak',
+          votes: 16
+        },
+        {
+          value: 'Tarte aux pommes',
+          votes: 13
+        },
+        {
+          value: 'Kebab',
+          votes: 4
+        }
+      ]
+    };
   }
 
   get(url) {
