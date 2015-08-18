@@ -7,14 +7,15 @@ let app = express(),
     router = express.Router();
 
 // Models
-let CommentModel = require('./models/CommentModel.js');
+let PollModel = require('./models/PollModel.js');
+let OptionModel = require('./models/OptionModel.js');
 
 const FILES_PATH = path.normalize(__dirname + '/files');
 const TEMP_PATH = path.normalize(__dirname + '/temp');
 
 let os_hostname = os.hostname();
 
-const MONGOOSE_CONNECT = 'mongodb://pierre:microst7@waffle.modulusmongo.net:27017/a8gyNeqy';
+const MONGOOSE_CONNECT = 'mongodb://pierre:microst7@apollo.modulusmongo.net:27017/pixAwi5n';
 
 global.connection = mongoose.createConnection(MONGOOSE_CONNECT);
 
@@ -25,49 +26,31 @@ app.use(function(req, res, next) {
   return next();
 });
 
-router.route('/comments/:id')
+router.route('/poll')
+
+  .post(function(req,res) {
+    let { options, question } = req.body;
+    console.log(options, question);
+  });
+
+router.route('/poll/:id')
+
   .get(function(req, res, next) {
 
-    let video_id = req.params.id;
-    let query = CommentModel.findOne().where('video_id').equals(video_id);
+    let poll_id = req.params.id;
+    let query = CommentModel.findOne().where('_id').equals(poll_id);
 
-    console.log('GET comments id:' + video_id);
-
-    // query.exec().addBack((err, comment) => {
-    //   console.log('LEL');
-    //   res.json(comment);
+    // res.json({
+    //   poll_id,
+    //   comments
     // });
-
-    let comments = [], at = 0;
-
-    for(let i=0,l=30;i< l;i++) {
-      let up = Math.floor(Math.random()*100),
-          down = Math.floor(Math.random()*80),
-          score = up - down;
-      comments.push({
-        id: i,
-        message: 'Commentaire '+i,
-        username: 'user'+i,
-        at: at,
-        time: 1437142535824,
-        up: up,
-        down: down,
-        score: score
-      });
-      at += Math.floor(Math.random()*5);
-    }
-
-    res.json({
-      video_id,
-      comments
-    });
 
   })
 
 app.use('/api', router);
 
-let server = app.listen(3000, function () {
+let server = app.listen(10000, function () {
   let host = server.address().address;
   let port = server.address().port;
-  console.log('Listening at http://%s:%s/api', host, port);
+  console.log(`Listening at http://127.0.0.1:${port}/api`);
 });
