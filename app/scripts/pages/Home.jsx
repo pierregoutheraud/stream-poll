@@ -1,6 +1,6 @@
 import React from 'react/addons';
 
-var StreamPoll = React.createClass({
+var Home = React.createClass({
 
   getInitialState: function() {
     return {};
@@ -12,10 +12,10 @@ var StreamPoll = React.createClass({
   render: function() {
 
     return (
-      <div className="stream-poll"></div>
+      <div className="page-poll">HOME23</div>
     );
   }
 
 });
 
-export default StreamPoll;
+export default Home;

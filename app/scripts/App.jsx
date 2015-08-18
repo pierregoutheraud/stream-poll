@@ -1,25 +1,15 @@
-import React, { Component } from 'react';
-import RVC from 'components/StreamPoll.jsx';
+import React from 'react';
+
+import Home from 'pages/Home.jsx';
+import Poll from 'pages/Poll.jsx';
+import Results from 'pages/Results.jsx';
 
 import { Router, Route } from 'react-router';
 import { history } from 'react-router/lib/BrowserHistory';
 
-export default class App extends Component {
-  render() {
-    return (
-      <Router history={history}>
-        <Route path="/" component={Home} >
-          <Route path="Home" component={Home} />
-          <Route path="/poll/:id" component={Poll} >
-            <Route path="/results" component={Results} />
-          </Route>
-        </Route>
-      </Router>
-    );
-  }
-}
-
-React.render(
-  <App />,
-  document.body
-);
+React.render((
+  <Router history={history}>
+    <Route path="/" component={Home} ></Route>
+    <Route path="/poll/:id" component={Poll} ></Route>
+  </Router>
+), document.body);
