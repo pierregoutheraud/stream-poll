@@ -1,6 +1,7 @@
 import React from 'react/addons';
 import api from 'utils/Api.js';
 import CONFIG from 'config/config.js';
+import _ from 'underscore';
 
 var PollResults = React.createClass({
 
@@ -20,13 +21,23 @@ var PollResults = React.createClass({
         question: poll.question,
         options: poll.options
       });
+      this.connectSocket();
     });
+
+  },
+
+  connectSocket: function() {
     let socket = io.connect(CONFIG.SOCKET_ENDPOINT);
     socket.on('connect', () => {
       socket.emit('poll', { id: this.props.params.id });
     });
-    socket.on('vote:new', function (data) {
-      console.log(data);
+    socket.on('vote:new', (data) => {
+      let { option_id, votes } = data;
+      let option = _.findWhere(this.state.options, {_id:option_id});
+      option.votes = votes;
+      this.setState({
+        options: this.state.options
+      });
     });
   },
 
