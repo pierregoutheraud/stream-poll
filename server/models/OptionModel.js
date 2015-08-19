@@ -8,6 +8,7 @@ let OptionSchema = new Schema({
     unique: true,
     'default': shortId.generate
   },
+  value: String,
   vote: Number
 });
 

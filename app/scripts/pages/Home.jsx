@@ -1,4 +1,5 @@
 import React from 'react/addons';
+import api from 'utils/Api.js';
 
 var Home = React.createClass({
 
@@ -44,7 +45,7 @@ var Home = React.createClass({
       question: this.state.question,
       options: this.state.options.filter(Boolean)
     };
-    console.log(data);
+    api.postPoll(data);
   },
 
   render: function() {
