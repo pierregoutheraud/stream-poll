@@ -9,11 +9,11 @@ class Api {
   }
 
   getPoll (poll_id) {
-    return {
-      question: "Que dois je manger aujourd'hui ?",
-      options: ['Pates','Steak','Tarte aux pommes','Kebab']
-    };
-    // return this.get('/poll/' + poll_id);
+    // return {
+    //   question: "Que dois je manger aujourd'hui ?",
+    //   options: ['Pates','Steak','Tarte aux pommes','Kebab']
+    // };
+    return this.get('/poll/' + poll_id);
   }
 
   getPollResults (poll_id) {
@@ -49,10 +49,10 @@ class Api {
         .accept('application/json')
         .end(function(err, res) {
           if( err ) {
-            this.catchError(res.body.error);
+            // this.catchError(res.body.error);
             reject(err);
           } else {
-            resolve(res);
+            resolve(res.body);
           }
         });
     });
@@ -69,7 +69,7 @@ class Api {
         .send(data)
         .end( (err, res) => {
           if( err ) {
-            this.catchError(res.body.error);
+            // this.catchError(res.body.error);
             reject(res.body.error);
           } else {
             resolve(res.body);
@@ -87,7 +87,7 @@ class Api {
         // .set('Content-Type', 'application/x-www-form-urlencoded')
         .end( (err, res) => {
           if( err ) {
-            this.catchError(res.body.error);
+            // this.catchError(res.body.error);
             reject(res.body.error);
           } else {
             resolve(res.body);

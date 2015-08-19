@@ -45,7 +45,10 @@ var Home = React.createClass({
       question: this.state.question,
       options: this.state.options.filter(Boolean)
     };
-    api.postPoll(data);
+    api.postPoll(data).then(function(poll){
+      // console.log(poll);
+      window.location.href = poll._id;
+    });
   },
 
   render: function() {

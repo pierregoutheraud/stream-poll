@@ -3,6 +3,7 @@ let mongoose = require('mongoose'),
     shortId = require('shortid');
 
 let PollSchema = new Schema({
+  __v: { type: Number, select: false },
   _id: {
     type: String,
     unique: true,
@@ -10,6 +11,6 @@ let PollSchema = new Schema({
   },
   question: String,
   options: [{type: String, ref: 'Option'}]
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('Poll', PollSchema);

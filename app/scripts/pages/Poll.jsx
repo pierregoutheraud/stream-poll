@@ -1,22 +1,27 @@
 import React from 'react/addons';
+import { Link } from 'react-router';
 import api from 'utils/Api.js';
 
 var Poll = React.createClass({
 
   getInitialState: function() {
-    let poll = api.getPoll( this.props.params.id );
     return {
-      question: poll.question,
-      options: poll.options,
+      id: null,
+      question: null,
+      options: null,
       indexOptionChecked: null,
       newOptions: []
     };
   },
 
   componentWillMount: function() {
-  },
-
-  componentDidMount: function() {
+    api.getPoll( this.props.params.id ).then((poll) => {
+      this.setState({
+        id: poll._id,
+        question: poll.question,
+        options: poll.options
+      });
+    });
   },
 
   onAddOption: function(e) {
@@ -67,12 +72,16 @@ var Poll = React.createClass({
 
   render: function() {
 
+    if (this.state.id === null) {
+      return <div>Loading...</div>;
+    }
+
     let i = -1;
 
     let options = this.state.options.map((option) => {
       i++;
       let checked = this.state.indexOptionChecked === i;
-      return <li key={i}>{i+1}. <input type="checkbox" checked={checked} onChange={this.onCheckOption.bind(this,i)} /> {option}</li>;
+      return <li key={i}>{i+1}. <input type="checkbox" checked={checked} onChange={this.onCheckOption.bind(this,i)} /> {option.value}</li>;
     });
 
     let newOptions = this.state.newOptions.map((value) => {
@@ -91,7 +100,7 @@ var Poll = React.createClass({
 
         <h1>Stream Poll</h1>
 
-      <div>{JSON.stringify(this.state, null, 2)}</div>
+        <div>{JSON.stringify(this.state, null, 2)}</div>
 
         <h3>{ this.state.question }</h3>
 
@@ -102,7 +111,7 @@ var Poll = React.createClass({
         </ul>
 
         <button type="submit" onClick={this.vote} >Vote</button>
-        <a href="" >Results</a>
+        <Link to={"/"+this.state.id+"/r"} >Results</Link>
 
       </div>
     );

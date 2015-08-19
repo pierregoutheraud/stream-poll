@@ -2,7 +2,8 @@ let express =    require('express'),
     mongoose =   require('mongoose'),
     path =       require('path'),
     os =         require('os'),
-    bodyParser = require('body-parser')
+    bodyParser = require('body-parser'),
+    socketService = require('./socketService');
 
 let app = express(),
     router = express.Router();
@@ -28,6 +29,39 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.json())
 
+let savePoll = function(poll) {
+  return new Promise((resolve, reject) => {
+    console.log('saving poll...');
+    poll.save(function(err, poll){
+      if (err) reject(err);
+      PollModel.populate(poll, {path:"options"}, function(err, poll) {
+        if (err) reject(err);
+        console.log('poll saved. RESOLVE :O');
+        resolve(poll);
+      });
+    });
+  });
+};
+
+let saveOptionsAndPoll = function(options, poll, callback) {
+  let optionValue = options[0]; // we get first option value of queue
+  let option = new OptionModel({
+    value: optionValue,
+    votes: 0
+  });
+  console.log('Saving option '+optionValue+'...');
+  option.save(function(err, option){
+    console.log('option '+optionValue+' saved.');
+    poll.options.push(option._id);
+    options.shift();
+    if (options[0]) {
+      saveOptionsAndPoll(options, poll, callback);
+    } else {
+      callback();
+    }
+  });
+}
+
 router.route('/poll')
 
   .post(function(req,res) {
@@ -38,31 +72,9 @@ router.route('/poll')
       question: question
     });
 
-    let savePoll = function() {
-      console.log('saving poll...');
-      poll.save(function(err, poll){
-        PollModel.populate(poll, {path:"options"}, function(err, poll) {
-          console.log('poll saved.');
-          res.json(poll);
-        });
-
-      });
-    };
-
-    options.forEach((o, i) => {
-      let option = new OptionModel({
-        value: 'test',
-        vote: 0
-      });
-
-      console.log('saving option '+i);
-
-      option.save(function(err, option){
-        if (err) console.error(err)
-        console.log('option saved '+i, option._id);
-        poll.options.push(option._id);
-        console.log(poll.options.length+'/'+options.length);
-        if (options.length === poll.options.length) savePoll();
+    saveOptionsAndPoll(options, poll, function(){
+      savePoll(poll).then((poll) => {
+        res.json(poll);
       });
     });
 
@@ -73,14 +85,40 @@ router.route('/poll/:id')
   .get(function(req, res, next) {
 
     let poll_id = req.params.id;
-    let query = CommentModel.findOne().where('_id').equals(poll_id);
+    let query = PollModel.findOne().where('_id').equals(poll_id).populate('options')
+    query.exec().addBack((err, poll) => {
+      if (err) console.error(err)
 
-    // res.json({
-    //   poll_id,
-    //   comments
-    // });
+      if (!poll) {
+        res.status(404).json({
+          error: 'Poll not found'
+        });
+      }
+      else {
+        res.json(poll);
+      }
+    });
 
-  })
+  });
+
+router.route('/vote/:poll_id/:option_id')
+
+  // Vote
+  .post(function(req, res, next) {
+
+    let option_id = req.params.option_id,
+        poll_id = req.params.poll_id;
+
+    let query = OptionModel.findOne().where('_id').equals(option_id);
+    query.exec().addBack((err, option) => {
+      option.votes++;
+      option.save(function(err, option){
+        res.json(option);
+        socketService.newVote(poll_id, option_id, option.votes);
+      });
+    });
+
+  });
 
 app.use('/api', router);
 
@@ -89,3 +127,5 @@ let server = app.listen(10000, function () {
   let port = server.address().port;
   console.log(`Listening at http://127.0.0.1:${port}/api`);
 });
+
+socketService.start(server);

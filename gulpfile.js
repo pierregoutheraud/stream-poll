@@ -139,7 +139,7 @@ gulp.task("server", function (cb) {
     .pipe(gulp.dest(build + 'server/'));
 });
 gulp.task('watch-server', ['server'], function() {
-  gulp.watch('server/server.js', ['server']);
+  gulp.watch('server/**/*.js', ['server']);
   $.nodemon({ script: 'build/server/server.js' }).on('restart', function () {
     console.log('server.js restarted!')
   })
