@@ -9,11 +9,11 @@ class Api {
   }
 
   getPoll (poll_id) {
-    // return {
-    //   question: "Que dois je manger aujourd'hui ?",
-    //   options: ['Pates','Steak','Tarte aux pommes','Kebab']
-    // };
     return this.get('/poll/' + poll_id);
+  }
+
+  vote (poll_id, option_id) {
+    return this.post('/vote/'+poll_id+'/'+option_id);
   }
 
   getPollResults (poll_id) {
@@ -58,7 +58,7 @@ class Api {
     });
   }
 
-  post(url, data=null) {
+  post(url, data=[]) {
     url = CONFIG.API_ENDPOINT + url;
     log('api POST', url)
     return new Promise((resolve, reject) => {

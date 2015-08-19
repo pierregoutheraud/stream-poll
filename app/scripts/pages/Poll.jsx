@@ -1,8 +1,10 @@
 import React from 'react/addons';
-import { Link } from 'react-router';
+import { Link, Router, Navigation } from 'react-router';
 import api from 'utils/Api.js';
 
 var Poll = React.createClass({
+
+  mixins: [ Navigation ],
 
   getInitialState: function() {
     return {
@@ -50,12 +52,17 @@ var Poll = React.createClass({
   },
 
   vote: function() {
-    let options = this.state.options.concat( this.state.newOptions );
-    let data = {
-      id: this.props.params.id,
-      option: options[this.state.indexOptionChecked]
-    };
-    console.log('Vote for: ', data);
+    let options = this.state.options.concat( this.state.newOptions ),
+        poll_id = this.props.params.id,
+        option_id = options[this.state.indexOptionChecked]._id;
+
+    api.vote(poll_id, option_id).then((option) => {
+      // window.location.href = poll._id;
+      // Router.transitionTo('/'+poll._id+'/r');
+      this.transitionTo('/'+poll_id+'/r');
+      // this.transitionTo('pollResults', {id: poll._id});
+    });
+
   },
 
   onCheckOption: function(i) {

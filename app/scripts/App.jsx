@@ -11,6 +11,6 @@ React.render((
   <Router history={history}>
     <Route path="/" component={Home} ></Route>
     <Route path="/:id" component={Poll} ></Route>
-    <Route path="/:id/r" component={PollResults} ></Route>
+    <Route name="pollResults" path="/:id/r" component={PollResults} ></Route>
   </Router>
 ), document.body);
