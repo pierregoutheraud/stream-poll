@@ -9,7 +9,7 @@ let PollSchema = new Schema({
     'default': shortId.generate
   },
   question: String,
-  options: [{type: Schema.Types.ObjectId, ref: 'Option'}]
+  options: [{type: String, ref: 'Option'}]
 });
 
 module.exports = mongoose.model('Poll', PollSchema);

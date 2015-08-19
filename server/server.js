@@ -16,7 +16,7 @@ const TEMP_PATH = path.normalize(__dirname + '/temp');
 
 let os_hostname = os.hostname();
 
-const MONGOOSE_CONNECT = 'mongodb://pierre:microst7@waffle.modulusmongo.net:27017/os6omutY';
+const MONGOOSE_CONNECT = 'mongodb://pierre:microst7@apollo.modulusmongo.net:27017/iqYj5uto';
 var connection = mongoose.connect(MONGOOSE_CONNECT);
 
 app.use(function(req, res, next) {
@@ -38,27 +38,32 @@ router.route('/poll')
       question: question
     });
 
+    let savePoll = function() {
+      console.log('saving poll...');
+      poll.save(function(err, poll){
+        PollModel.populate(poll, {path:"options"}, function(err, poll) {
+          console.log('poll saved.');
+          res.json(poll);
+        });
+
+      });
+    };
+
     options.forEach((o, i) => {
       let option = new OptionModel({
-        value: o,
+        value: 'test',
         vote: 0
       });
-      poll.options.push(option);
-    });
 
-    poll.save(function (err, poll) {
-      if (err) return console.log(err);
+      console.log('saving option '+i);
 
-      // PollModel.populate(poll, {path:"options"}, function(err, poll) {
-      //   console.log(poll);
-      // });
-
-      // PollModel.populate(poll, function (err, poll) {
-      //   console.log(poll);
-      // })
-
-      // console.log(poll);
-      // res.json(poll);
+      option.save(function(err, option){
+        if (err) console.error(err)
+        console.log('option saved '+i, option._id);
+        poll.options.push(option._id);
+        console.log(poll.options.length+'/'+options.length);
+        if (options.length === poll.options.length) savePoll();
+      });
     });
 
   });
