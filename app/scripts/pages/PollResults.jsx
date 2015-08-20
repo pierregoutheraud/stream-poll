@@ -2,6 +2,8 @@ import React from 'react/addons';
 import api from 'utils/Api.js';
 import CONFIG from 'config/config.js';
 import _ from 'underscore';
+import { Link } from 'react-router';
+import Loading from 'pages/Loading.jsx';
 
 var PollResults = React.createClass({
 
@@ -44,23 +46,43 @@ var PollResults = React.createClass({
   render: function() {
 
     if (this.state.id === null) {
-      return <div>Loading...</div>;
+      return <Loading />;
     }
 
+    let totalVotes = 0;
+    this.state.options.forEach((option) => { totalVotes += option.votes; });
+
     let options = this.state.options.map((option, i) => {
-      return <li key={i}>{i+1}. {option.value} / Votes: {option.votes}</li>;
+      let percentage = totalVotes === 0 ? 0 : Math.floor(option.votes * 100 / totalVotes);
+      let styleProgressbar = {
+        width: percentage + '%'
+      };
+      return (
+        <li key={i} className="option home__option" >
+          <div className="option__case">{i+1}</div>
+          <span className="option__value">{ option.value }</span>
+          <div className="option__results">
+            <div className="option__results__bar">
+              <div className="option__results__bar__progress" style={styleProgressbar} ></div>
+            </div>
+            <div className="option__results__votes"><strong>{ option.votes }</strong> { option.votes > 1 ? 'votes' : 'vote' } (<strong>{percentage}%</strong>)</div>
+          </div>
+        </li>
+      );
     });
 
     return (
-      <div className="stream-poll page-poll-results">
+      <div className="poll-results">
 
-        <div>{JSON.stringify(this.state, null, 1)}</div><br/>
+        <h1 className="question" >{ this.state.question }</h1>
 
-        <h2>{this.state.question}</h2>
-
-        <ul>
+        <ul className="options">
           {options}
         </ul>
+
+        <footer>
+          <Link className="btn btn--black" to={"/"} >create new poll</Link>
+        </footer>
 
       </div>
     );

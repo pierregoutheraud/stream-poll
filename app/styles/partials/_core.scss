@@ -43,6 +43,8 @@ ul, li {
 .content {
   padding: 20px;
   text-align: center;
+  position: relative;
+  padding-bottom: 80px;
 }
 
 .question {
@@ -104,6 +106,7 @@ ul, li {
     height: 40px;
     width: 36px;
     line-height: 39px;
+    font-weight: 700;
 
     // background-color: $black;
     // color: white;
@@ -139,12 +142,61 @@ ul, li {
     display: none;
   }
 
+  $resultsHeight: 36px;
+
+  &__results {
+
+  @extend .clearfix;
+  height: $resultsHeight;
+  width: 100%;
+
+  position: relative;
+  top: -1px;
+  z-index: 2;
+  background-color: white;
+
+    &__bar {
+      display: inline-block;
+      vertical-align: middle;
+      width: 50%;
+      height: 100%;
+      // float: left;
+      background-color: rgba(0,0,0,.1);
+      position: relative;
+      &__progress {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 100%;
+        background-color: $green;
+        width: 20%;
+        transition: 300ms all ease;
+      }
+    }
+
+    &__votes {
+      font-size: 15px;
+      height: $resultsHeight;
+      line-height: $resultsHeight;
+      display: inline-block;
+      vertical-align: middle;
+      width: 50%;
+      border: 1px solid rgba(0,0,0,.1);
+
+      strong {
+        font-weight: 700;
+      }
+    }
+
+  }
+
 }
 
 /* ---- footer ---- */
 
 footer {
   position: absolute;
+  z-index: 3;
   bottom: 0;
   left: 0;
   right: 0;

@@ -49,10 +49,10 @@ class socketService {
   }
 
   newVote(poll_id, option_id, votes) {
+    console.log('new vote !');
     for (let i=0,l=this.users.length;i<l;i++) {
       let user = this.users[i];
       if (user.poll_id == poll_id) {
-        // console.log('FIND POLL !');
         let data = {
           option_id: option_id,
           votes: votes

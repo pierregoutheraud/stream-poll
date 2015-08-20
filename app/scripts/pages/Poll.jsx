@@ -1,6 +1,7 @@
 import React from 'react/addons';
 import { Link, Router, Navigation } from 'react-router';
 import api from 'utils/Api.js';
+import Loading from 'pages/Loading.jsx';
 
 var Poll = React.createClass({
 
@@ -57,12 +58,8 @@ var Poll = React.createClass({
         option_id = options[this.state.indexOptionChecked]._id;
 
     api.vote(poll_id, option_id).then((option) => {
-      // window.location.href = poll._id;
-      // Router.transitionTo('/'+poll._id+'/r');
       this.transitionTo('/'+poll_id+'/r');
-      // this.transitionTo('pollResults', {id: poll._id});
     });
-
   },
 
   onCheckOption: function(i) {
@@ -80,14 +77,7 @@ var Poll = React.createClass({
   render: function() {
 
     if (this.state.id === null) {
-      return (
-        <div className="stream-poll poll">
-          <header>
-            <Link to={"/"} ></Link>
-          </header>
-          <div className="content">Loading...</div>
-        </div>
-      );
+      return <Loading />;
     }
 
     let i = -1;
@@ -115,30 +105,24 @@ var Poll = React.createClass({
     });
 
     return (
-      <div className="stream-poll poll">
 
-        <header>
-          <Link to={"/"} ></Link>
-        </header>
+      <div className="poll">
 
-        <div className="content">
+        <h1 className="question" >{ this.state.question }</h1>
 
-          <h1 className="question" >{ this.state.question }</h1>
+        <ul className="options">
+          { options }
+          { newOptions }
+          { this.state.newOptions.length === 0 ? <li className="options__add" ><a href="" onClick={this.onAddOption} >+</a></li> : null }
+        </ul>
 
-          <ul className="options">
-            { options }
-            { newOptions }
-            { this.state.newOptions.length === 0 ? <li className="options__add" ><a href="" onClick={this.onAddOption} >+</a></li> : null }
-          </ul>
-
-          <footer>
-            <button type="submit" className="btn btn--green" onClick={this.vote} >vote</button>
-            <Link className="btn btn--black" to={"/"+this.state.id+"/r"} >results</Link>
-          </footer>
-
-        </div>
+        <footer>
+          <button type="submit" className="btn btn--green" onClick={this.vote} >vote</button>
+          <Link className="btn btn--black" to={"/"+this.state.id+"/r"} >results</Link>
+        </footer>
 
       </div>
+
     );
   }
 

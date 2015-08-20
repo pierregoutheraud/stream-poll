@@ -1,8 +1,10 @@
 import React from 'react/addons';
 import api from 'utils/Api.js';
-import { Link } from 'react-router';
+import { Link, Router, Navigation } from 'react-router';
 
 var Home = React.createClass({
+
+  mixins: [ Navigation ],
 
   getInitialState: function() {
     return {
@@ -59,8 +61,8 @@ var Home = React.createClass({
       this.setState({
         sending: true
       });
-      api.postPoll(data).then(function(poll){
-        window.location.href = poll._id;
+      api.postPoll(data).then((poll) => {
+        this.transitionTo('/'+poll._id);
       });
 
     } else {
@@ -89,13 +91,8 @@ var Home = React.createClass({
     }
 
     return (
-      <div className="stream-poll home">
 
-        <header>
-          <Link to={"/"} ></Link>
-        </header>
-
-        <div className="content">
+      <div className="home">
 
           <textarea
             placeholder="Type your question here"
@@ -110,13 +107,12 @@ var Home = React.createClass({
             <li className="options__add"><a href="" onClick={this.onAddOption} >+</a></li>
           </ul>
 
-        </div>
-
         <footer>
           <button type="submit" className="btn btn--green" onClick={onClickSubmit} >{submitText}</button>
         </footer>
 
       </div>
+
     );
   }
 
