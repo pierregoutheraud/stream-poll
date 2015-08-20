@@ -91,7 +91,7 @@ var Home = React.createClass({
 
     return (
 
-      <div className="home">
+      <div className="create">
 
           <textarea
             placeholder="Type your question here"

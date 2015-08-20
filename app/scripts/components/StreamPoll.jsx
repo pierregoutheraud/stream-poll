@@ -4,10 +4,6 @@ import { Link } from 'react-router';
 
 var StreamPoll = React.createClass({
 
-  // getInitialState: function() {
-  //   return {};
-  // },
-
   render: function() {
 
     return (
