@@ -80,7 +80,14 @@ var Poll = React.createClass({
   render: function() {
 
     if (this.state.id === null) {
-      return <div>Loading...</div>;
+      return (
+        <div className="stream-poll poll">
+          <header>
+            <Link to={"/"} ></Link>
+          </header>
+          <div className="content">Loading...</div>
+        </div>
+      );
     }
 
     let i = -1;
@@ -88,37 +95,48 @@ var Poll = React.createClass({
     let options = this.state.options.map((option) => {
       i++;
       let checked = this.state.indexOptionChecked === i;
-      return <li key={i}>{i+1}. <input type="checkbox" checked={checked} onChange={this.onCheckOption.bind(this,i)} /> {option.value}</li>;
+      return (
+        <li key={i} className="option home__option" >
+          <div className="option__case"><input type="checkbox" checked={checked} onChange={this.onCheckOption.bind(this,i)} /></div> <span className="option__value">{option.value}</span>
+        </li>
+      );
     });
 
     let newOptions = this.state.newOptions.map((value) => {
       i++;
       let checked = this.state.indexOptionChecked === i;
       return (
-        <li key={i} >
-          {i+1}. <input type="checkbox" checked={checked} onChange={this.onCheckOption.bind(this,i)} /><input ref="newOption" placeholder="Type an option here" onChange={this.onChangeOption} type="text" value={value} />
-          <a href="" onClick={this.onRemoveOption}>(-)</a>
+        <li key={i} className="option home__option" >
+          <div className="option__case"><input type="checkbox" checked={checked} onChange={this.onCheckOption.bind(this,i)} /></div>
+          <input className="option__input input" ref="newOption" placeholder="Type an option here" onChange={this.onChangeOption} type="text" value={value} />
+          <a className="option__remove" href="" onClick={this.onRemoveOption}>(-)</a>
         </li>
       );
     });
 
     return (
-      <div className="stream-poll page-poll">
+      <div className="stream-poll poll">
 
-        <h1>Stream Poll</h1>
+        <header>
+          <Link to={"/"} ></Link>
+        </header>
 
-        <div>{JSON.stringify(this.state, null, 2)}</div>
+        <div className="content">
 
-        <h3>{ this.state.question }</h3>
+          <h1 className="question" >{ this.state.question }</h1>
 
-        <ul>
-          { options }
-          { newOptions }
-          { this.state.newOptions.length === 0 ? <li><a href="" onClick={this.onAddOption} >(+)</a></li> : null }
-        </ul>
+          <ul className="options">
+            { options }
+            { newOptions }
+            { this.state.newOptions.length === 0 ? <li className="options__add" ><a href="" onClick={this.onAddOption} >+</a></li> : null }
+          </ul>
 
-        <button type="submit" onClick={this.vote} >Vote</button>
-        <Link to={"/"+this.state.id+"/r"} >Results</Link>
+          <footer>
+            <button type="submit" className="btn btn--green" onClick={this.vote} >vote</button>
+            <Link className="btn btn--black" to={"/"+this.state.id+"/r"} >results</Link>
+          </footer>
+
+        </div>
 
       </div>
     );

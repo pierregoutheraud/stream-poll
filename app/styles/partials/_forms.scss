@@ -1,0 +1,57 @@
+textarea {
+  padding: 12px 20px;
+}
+
+.input {
+
+  border: 1px solid rgba(0,0,0,.1);
+  resize: none;
+  color: $black;
+  width: 100%;
+  transition: 300ms ease border-color;
+
+  &:hover, &:focus {
+    outline: none;
+  }
+  &:focus {
+    border-color: rgba(0,0,0,.3);
+  }
+
+}
+
+/* --- buttons --- */
+
+.btn {
+
+  display: inline-block;
+  border: none;
+  padding: 15px 20px;
+  // height: 30px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 300ms all ease;
+
+  &:focus, &:hover {
+    outline: none;
+  }
+
+  text-decoration: none;
+
+  &--black {
+    background-color: $black;
+    color: white;
+    &:hover {
+      background-color: lighten($black, 8);
+    }
+  }
+
+  &--green {
+    background-color: $green;
+    color: white;
+    &:hover {
+      background-color: darken($green, 8)
+    }
+  }
+
+}

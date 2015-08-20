@@ -1,24 +1,26 @@
 import React from 'react/addons';
 import api from 'utils/Api.js';
+import { Link } from 'react-router';
 
 var Home = React.createClass({
 
   getInitialState: function() {
     return {
       question: '',
-      options: ['', '', '', '']
+      options: ['', '', '', ''],
+      sending: false
     };
   },
 
   onChangeQuestion: function() {
     this.setState({
-      question: React.findDOMNode(this.refs.question).value.trim()
+      question: React.findDOMNode(this.refs.question).value
     });
   },
 
   onChangeOption: function(i) {
     let input = React.findDOMNode(this.refs['option'+i]);
-    this.state.options[i] = input.value.trim();
+    this.state.options[i] = input.value;
     this.setState({
       options: this.state.options
     });
@@ -41,47 +43,78 @@ var Home = React.createClass({
   },
 
   send: function() {
-    let data = {
-      question: this.state.question,
-      options: this.state.options.filter(Boolean)
-    };
-    api.postPoll(data).then(function(poll){
-      // console.log(poll);
-      window.location.href = poll._id;
+
+    // filter(Boolen) = remove empty elements from array
+    // + trim every options
+    let options = this.state.options.filter(Boolean).map(function(e){
+      return e.trim();
     });
+
+    let data = {
+      question: this.state.question.trim(),
+      options: options
+    };
+
+    if (data.question.length && data.options.length > 1) {
+      this.setState({
+        sending: true
+      });
+      api.postPoll(data).then(function(poll){
+        window.location.href = poll._id;
+      });
+
+    } else {
+      console.error('incorrect form');
+    }
+
   },
 
   render: function() {
 
     let options = this.state.options.map((value,i) => {
       return (
-        <li key={i} >{i+1}.
-          <input ref={"option"+i} onChange={this.onChangeOption.bind(this,i)} placeholder="Type an option here" type="text" value={value} />
-          <a href="" onClick={this.onRemoveOption.bind(this,i)}>(-)</a>
+        <li key={i} className="option home__option" >
+          <div className="option__case">{i+1}</div>
+          <input className="option__input input" ref={"option"+i} onChange={this.onChangeOption.bind(this,i)} placeholder="Type an option here" type="text" value={value} />
+          <a className="option__remove" href="" onClick={this.onRemoveOption.bind(this,i)}>(-)</a>
         </li>
       );
     });
 
+    let submitText = 'create poll';
+    let onClickSubmit = this.send;
+    if (this.state.sending) {
+      submitText = 'creating poll...'
+      onClickSubmit = null;
+    }
+
     return (
-      <div className="stream-poll page-home">
+      <div className="stream-poll home">
 
-        <div>{JSON.stringify(this.state, null, 2)}</div>
+        <header>
+          <Link to={"/"} ></Link>
+        </header>
 
-        <h1>Stream Poll</h1>
+        <div className="content">
 
-        <input
-          placeholder="Type your question here"
-          type="text"
-          ref="question"
-          onChange={this.onChangeQuestion}
-        />
+          <textarea
+            placeholder="Type your question here"
+            type="text"
+            ref="question"
+            onChange={this.onChangeQuestion}
+            className="home__question input"
+          ></textarea>
 
-        <ul>
-          { options }
-          <li><a href="" onClick={this.onAddOption} >(+)</a></li>
-        </ul>
+          <ul className="options home__options" >
+            { options }
+            <li className="options__add"><a href="" onClick={this.onAddOption} >+</a></li>
+          </ul>
 
-        <button type="submit" onClick={this.send}>OK</button>
+        </div>
+
+        <footer>
+          <button type="submit" className="btn btn--green" onClick={onClickSubmit} >{submitText}</button>
+        </footer>
 
       </div>
     );
