@@ -43,21 +43,23 @@ let savePoll = function(poll) {
   });
 };
 
-let saveOptionsAndPoll = function(options, poll, callback) {
-  let optionValue = options[0]; // we get first option value of queue
+// Save options from array and push them to poll
+let saveOptionsAndPoll = function(optionsToSave, poll, callback, vote=false, optionsSaved=[]) {
+  console.log(`saveOptionsAndPoll [${optionsSaved.length}]`);
+  let optionValue = optionsToSave[optionsSaved.length]; // we get first option value of queue
   let option = new OptionModel({
     value: optionValue,
-    votes: 0
+    votes: vote ? 1 : 0
   });
   console.log('Saving option '+optionValue+'...');
   option.save(function(err, option){
     console.log('option '+optionValue+' saved.');
+    optionsSaved.push(option);
     poll.options.push(option._id);
-    options.shift();
-    if (options[0]) {
-      saveOptionsAndPoll(options, poll, callback);
+    if (optionsToSave[optionsSaved.length]) {
+      saveOptionsAndPoll(optionsToSave, poll, callback, vote, optionsSaved);
     } else {
-      callback();
+      callback(optionsSaved);
     }
   });
 }
@@ -101,22 +103,52 @@ router.route('/poll/:id')
 
   });
 
-router.route('/vote/:poll_id/:option_id')
+let vote = function ( option_id, callback ) {
+  console.log( 'vote for ' + option_id );
+  let query = OptionModel.findOne().where('_id').equals(option_id);
+  query.exec().addBack((err, option) => {
+    console.log(option);
+    option.votes++;
+    option.save(function(err, option){
+      callback(option);
+    });
+  });
+};
+
+router.route('/vote')
 
   // Vote
   .post(function(req, res, next) {
 
-    let option_id = req.params.option_id,
-        poll_id = req.params.poll_id;
+    let { option_id, poll_id, value } = req.body;
 
-    let query = OptionModel.findOne().where('_id').equals(option_id);
-    query.exec().addBack((err, option) => {
-      option.votes++;
-      option.save(function(err, option){
+    if (typeof value !== 'undefined') {
+
+      console.log('Create new option and save it to poll');
+
+      let query = PollModel.findOne().where('_id').equals(poll_id);
+      query.exec().addBack((err, poll) => {
+        let options = [value];
+        saveOptionsAndPoll(options, poll, function(options){ // Save option and vote at same time with last param at true
+          let option = options[0]; // Since we only saved 1 new option
+          savePoll(poll).then((poll) => {
+            res.json(option);
+            socketService.newVote(poll_id, option_id, option.votes);
+
+          });
+        }, true);
+      });
+
+    } else {
+
+      console.log('Existing option, we vote for it');
+
+      vote(option_id, function(option){
         res.json(option);
         socketService.newVote(poll_id, option_id, option.votes);
       });
-    });
+
+    }
 
   });
 

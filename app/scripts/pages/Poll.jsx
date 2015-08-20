@@ -13,7 +13,8 @@ var Poll = React.createClass({
       question: null,
       options: null,
       indexOptionChecked: null,
-      newOptions: []
+      newOptions: [],
+      voting: false
     };
   },
 
@@ -29,7 +30,8 @@ var Poll = React.createClass({
 
   onAddOption: function(e) {
     e.preventDefault();
-    this.state.newOptions.push('');
+
+    this.state.newOptions.push({ _id: null, value: '' });
 
     this.setState({
       newOptions: this.state.newOptions,
@@ -46,18 +48,27 @@ var Poll = React.createClass({
 
   onChangeOption: function() {
     let input = React.findDOMNode(this.refs.newOption);
-    this.state.newOptions[0] = input.value.trim();
+    this.state.newOptions[0].value = input.value;
     this.setState({
       newOptions: this.state.newOptions
     });
   },
 
   vote: function() {
+
+    if (this.state.indexOptionChecked === null) {
+      alert('Please select an option.');
+      return;
+    }
+
     let options = this.state.options.concat( this.state.newOptions ),
         poll_id = this.props.params.id,
-        option_id = options[this.state.indexOptionChecked]._id;
+        selectedOption = options[this.state.indexOptionChecked],
+        option_id = selectedOption._id,
+        value = selectedOption.value;
 
-    api.vote(poll_id, option_id).then((option) => {
+    this.setState({ voting: true });
+    api.vote(poll_id, option_id, value).then((option) => {
       this.transitionTo('/'+poll_id+'/r');
     });
   },
@@ -92,17 +103,23 @@ var Poll = React.createClass({
       );
     });
 
-    let newOptions = this.state.newOptions.map((value) => {
+    let newOptions = this.state.newOptions.map((option) => {
       i++;
       let checked = this.state.indexOptionChecked === i;
       return (
         <li key={i} className="option home__option" >
           <div className="option__case"><input type="checkbox" checked={checked} onChange={this.onCheckOption.bind(this,i)} /></div>
-          <input className="option__input input" ref="newOption" placeholder="Type an option here" onChange={this.onChangeOption} type="text" value={value} />
+          <input className="option__input input" ref="newOption" placeholder="Type an option here" onChange={this.onChangeOption} type="text" value={option.value} />
           <a className="option__remove" href="" onClick={this.onRemoveOption}>(-)</a>
         </li>
       );
     });
+
+    let voteText = 'vote', onClickVote = this.vote;
+    if (this.state.voting) {
+      voteText = 'voting...'
+      onClickVote = null;
+    }
 
     return (
 
@@ -117,7 +134,7 @@ var Poll = React.createClass({
         </ul>
 
         <footer>
-          <button type="submit" className="btn btn--green" onClick={this.vote} >vote</button>
+          <button type="submit" className="btn btn--green" onClick={onClickVote} >{voteText}</button>
           <Link className="btn btn--black" to={"/"+this.state.id+"/r"} >results</Link>
         </footer>
 

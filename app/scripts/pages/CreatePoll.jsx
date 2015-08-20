@@ -83,8 +83,7 @@ var Home = React.createClass({
       );
     });
 
-    let submitText = 'create poll';
-    let onClickSubmit = this.send;
+    let submitText = 'create poll', onClickSubmit = this.send;
     if (this.state.sending) {
       submitText = 'creating poll...'
       onClickSubmit = null;

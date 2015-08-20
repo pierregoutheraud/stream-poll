@@ -12,32 +12,20 @@ class Api {
     return this.get('/poll/' + poll_id);
   }
 
-  vote (poll_id, option_id) {
-    return this.post('/vote/'+poll_id+'/'+option_id);
-  }
-
-  getPollResults (poll_id) {
-    return {
-      question: "Que dois je manger aujourd'hui ?",
-      options: [
-        {
-          value: 'Pates',
-          votes: 23
-        },
-        {
-          value: 'Steak',
-          votes: 16
-        },
-        {
-          value: 'Tarte aux pommes',
-          votes: 13
-        },
-        {
-          value: 'Kebab',
-          votes: 4
-        }
-      ]
-    };
+  vote (poll_id, option_id, value) {
+    let data;
+    if (option_id) {
+      data = {
+        poll_id,
+        option_id
+      };
+    } else {
+      data = {
+        poll_id,
+        value
+      };
+    }
+    return this.post('/vote', data);
   }
 
   get(url) {
