@@ -17,20 +17,23 @@ var PollResults = React.createClass({
 
   componentWillMount: function() {
 
+    console.log('poll results componentWillMount');
+
     api.getPoll( this.props.params.id ).then((poll) => {
+      this.connectSocket();
       this.setState({
         id: poll._id,
         question: poll.question,
         options: poll.options
       });
-      this.connectSocket();
     });
 
   },
 
   connectSocket: function() {
-    let socket = io.connect(CONFIG.SOCKET_ENDPOINT);
+    let socket = io.connect(CONFIG.SOCKET_ENDPOINT, {'forceNew': true});
     socket.on('connect', () => {
+      console.log('Websocket connected !');
       socket.emit('poll', { id: this.props.params.id });
     });
     socket.on('vote:new', (data) => {
@@ -52,8 +55,12 @@ var PollResults = React.createClass({
     let totalVotes = 0;
     this.state.options.forEach((option) => { totalVotes += option.votes; });
 
-    let options = this.state.options.map((option, i) => {
-      let percentage = totalVotes === 0 ? 0 : Math.floor(option.votes * 100 / totalVotes);
+    // Sort
+    let options = _.sortBy(this.state.options, 'votes');
+    options.reverse();
+
+    options = options.map((option, i) => {
+      let percentage = totalVotes === 0 ? 0 : Math.round(option.votes * 100 / totalVotes);
       let styleProgressbar = {
         width: percentage + '%'
       };
@@ -65,7 +72,7 @@ var PollResults = React.createClass({
             <div className="option__results__bar">
               <div className="option__results__bar__progress" style={styleProgressbar} ></div>
             </div>
-            <div className="option__results__votes"><strong>{ option.votes }</strong> { option.votes > 1 ? 'votes' : 'vote' } (<strong>{percentage}%</strong>)</div>
+            <div className="option__results__votes"><strong>{ option.votes } { option.votes > 1 ? 'votes' : 'vote' }</strong> ({percentage}%)</div>
           </div>
         </li>
       );
@@ -79,6 +86,8 @@ var PollResults = React.createClass({
         <ul className="options">
           {options}
         </ul>
+
+        <div className="total">Total: <strong>{totalVotes} votes</strong></div>
 
         <footer>
           <Link className="btn btn--black" to={"/"} >create new poll</Link>

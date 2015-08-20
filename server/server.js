@@ -122,6 +122,11 @@ router.route('/vote')
 
     let { option_id, poll_id, value } = req.body;
 
+    if (typeof poll_id === 'undefined') {
+      res.json({ error: 'Missing parameters.' });
+      return false;
+    }
+
     if (typeof value !== 'undefined') {
 
       console.log('Create new option and save it to poll');

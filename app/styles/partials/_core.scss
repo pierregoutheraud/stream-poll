@@ -99,13 +99,13 @@ ul, li {
 
   &__case {
     float: left;
-    font-size: 16px;
+    font-size: 15px;
     color: $black;
     border: 1px solid rgba(0,0,0,.1);
     border-right: none;
-    height: 40px;
+    height: 45px;
     width: 36px;
-    line-height: 39px;
+    line-height: 45px;
     font-weight: 700;
 
     // background-color: $black;
@@ -125,15 +125,15 @@ ul, li {
     float: left;
     border: 1px solid rgba(0,0,0,.1);
     padding: 0 15px;
-    font-size: 13px;
-    height: 40px;
+    font-size: 15px;
+    height: 45px;
     display: block;
     width: calc(100% - 36px);
   }
 
   &__value {
     text-align: left;
-    padding: 11px 15px 10px 15px;
+    padding: 12px 15px 12px 15px;
     height: auto;
   }
 
@@ -142,7 +142,7 @@ ul, li {
     display: none;
   }
 
-  $resultsHeight: 36px;
+  $resultsHeight: 28px;
 
   &__results {
 
@@ -153,7 +153,8 @@ ul, li {
   position: relative;
   top: -1px;
   z-index: 2;
-  background-color: white;
+  // background-color: white;
+  padding-left: 36px;
 
     &__bar {
       display: inline-block;
@@ -161,7 +162,8 @@ ul, li {
       width: 50%;
       height: 100%;
       // float: left;
-      background-color: rgba(0,0,0,.1);
+      // background-color: rgba(0,0,0,.1);
+      background-color: percent-color(90);
       position: relative;
       &__progress {
         position: absolute;
@@ -175,14 +177,14 @@ ul, li {
     }
 
     &__votes {
-      font-size: 15px;
+      font-size: 14px;
       height: $resultsHeight;
       line-height: $resultsHeight;
       display: inline-block;
       vertical-align: middle;
       width: 50%;
-      border: 1px solid rgba(0,0,0,.1);
-      border-left: none;
+      border-bottom: 1px solid rgba(0,0,0,.1);
+      border-right: 1px solid rgba(0,0,0,.1);
 
       strong {
         font-weight: 700;
