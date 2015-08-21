@@ -1,21 +1,26 @@
 import React from 'react';
 
-import StreamPoll from 'components/StreamPoll.jsx';
+import Layout from 'pages/Layout.jsx';
 import Home from 'pages/Home.jsx';
-import CreatePoll from 'pages/CreatePoll.jsx';
-import Poll from 'pages/Poll.jsx';
+import Create from 'pages/Create.jsx';
+import Vote from 'pages/Vote.jsx';
 import PollResults from 'pages/PollResults.jsx';
 
 import { Router, Route } from 'react-router';
 import { history } from 'react-router/lib/BrowserHistory';
 
 React.render((
+
   <Router history={history}>
-    <Route component={StreamPoll} >
-      <Route path="/" component={Home} ></Route>
-      <Route path="/create" component={CreatePoll} ></Route>
-      <Route name="poll" path="/:id" component={Poll} ></Route>
-      <Route name="pollResults" path="/:id/r" component={PollResults} ></Route>
+
+    <Route path="/" component={Home} ></Route>
+
+    <Route path="/:username" component={Layout} >
+      <Route path="/c" name="create" component={Create} ></Route>
+      <Route path="/:id" name="poll" component={Vote} ></Route>
+      <Route path="/:id/r" name="results" component={PollResults} ></Route>*/
     </Route>
+
   </Router>
+
 ), document.body);

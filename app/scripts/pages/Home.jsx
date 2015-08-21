@@ -2,6 +2,7 @@ import React from 'react/addons';
 import api from 'utils/Api.js';
 import { Link, Router, Navigation } from 'react-router';
 import _twitch_ from 'twitch-sdk/twitch.min.js';
+import user from 'Models/User.js';
 
 var Home = React.createClass({
 
@@ -13,16 +14,21 @@ var Home = React.createClass({
 
   componentWillMount: function() {
 
-    Twitch.init({clientId: 'px7pb4sktw8jxje799wioymtiyytdam'}, function(error, status) {
+    Twitch.init({clientId: 'px7pb4sktw8jxje799wioymtiyytdam'}, (error, status) => {
       if (error) console.error( error );
       if (status.authenticated) {
-        // Already logged
-        console.log('User already logged !', status);
 
-        Twitch.api({method: '/user', verb: 'GET' }, function(res) {
-          console.log(res);
-          // let username = res.display_name;
-          // console.log(username);
+        console.log('User logged !', status);
+        user.authenticated = true;
+
+        Twitch.api({method: '/user', verb: 'GET' }, (error, res) => {
+          if (error) console.error( error );
+          let { _id, display_name, logo } = res;
+          user.streamer = true;
+          user.username = display_name;
+          user.logo = logo;
+          user.id = _id;
+          this.transitionTo('/' + display_name + '/c');
         });
 
       }
@@ -40,7 +46,6 @@ var Home = React.createClass({
   render: function() {
 
     return (
-
       <div className="home">
 
           <p>you are a</p>
@@ -60,8 +65,8 @@ var Home = React.createClass({
           </div>
 
       </div>
-
     );
+
   }
 
 });

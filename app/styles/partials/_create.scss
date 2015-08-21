@@ -2,6 +2,13 @@
 
   text-align: center;
 
+  .advice {
+    font-size: 16px;
+    margin-bottom: 20px;
+    // font-style: italic;
+    color: percent-color(20)
+  }
+
   textarea.home__question {
     font-size: 17px;
   }

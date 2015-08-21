@@ -1,9 +1,9 @@
 import React from 'react/addons';
 import { Link, Router, Navigation } from 'react-router';
-import api from 'utils/Api.js';
+import api from 'utils/WebsocketApi.js';
 import Loading from 'pages/Loading.jsx';
 
-var Poll = React.createClass({
+let Vote = React.createClass({
 
   mixins: [ Navigation ],
 
@@ -145,4 +145,4 @@ var Poll = React.createClass({
 
 });
 
-export default Poll;
+export default Vote;

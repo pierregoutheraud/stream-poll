@@ -1,6 +1,8 @@
 import React from 'react/addons';
-import api from 'utils/Api.js';
+import api from 'utils/WebsocketApi.js';
+import CONFIG from 'config/config.js';
 import { Link, Router, Navigation } from 'react-router';
+import user from 'Models/User.js';
 
 var Home = React.createClass({
 
@@ -10,7 +12,7 @@ var Home = React.createClass({
     return {
       question: '',
       options: ['', '', '', ''],
-      sending: false
+      creating: false
     };
   },
 
@@ -58,11 +60,10 @@ var Home = React.createClass({
     };
 
     if (data.question.length && data.options.length > 1) {
-      this.setState({
-        sending: true
-      });
+      // this.setState({ creating: true });
+
       api.postPoll(data).then((poll) => {
-        this.transitionTo('/'+poll._id);
+        this.transitionTo('/' + user.username + '/' + poll._id);
       });
 
     } else {
@@ -84,7 +85,7 @@ var Home = React.createClass({
     });
 
     let submitText = 'create poll', onClickSubmit = this.send;
-    if (this.state.sending) {
+    if (this.state.creating) {
       submitText = 'creating poll...'
       onClickSubmit = null;
     }
@@ -92,6 +93,8 @@ var Home = React.createClass({
     return (
 
       <div className="create">
+
+        <p className="advice" >Ask a question to your viewers<br/>and find out what they think.</p>
 
           <textarea
             placeholder="Type your question here"
