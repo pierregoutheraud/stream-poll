@@ -49,7 +49,7 @@ class TwitchSDK {
     store.set('login_redirect', login_redirect);
     Twitch.login({
       // scope: ['user_read', 'channel_read']
-      // redirect_uri: window.location.origin + '/login',
+      redirect_uri: window.location.origin + '/login',
       popup: false,
       scope: ['user_read']
     });
