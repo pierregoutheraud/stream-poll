@@ -1,8 +1,10 @@
-let mongoose = require('mongoose'),
-    { Schema } = mongoose,
-    shortId = require('shortid');
+'use strict';
 
-let PollSchema = new Schema({
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var shortId = require('shortid');
+
+var PollSchema = new Schema({
   __v: { type: Number, select: false },
   _id: {
     type: String,
@@ -10,7 +12,7 @@ let PollSchema = new Schema({
     'default': shortId.generate
   },
   question: String,
-  options: [{type: String, ref: 'Option'}]
+  options: [{ type: String, ref: 'Option' }]
 }, { versionKey: false });
 
 module.exports = mongoose.model('Poll', PollSchema);

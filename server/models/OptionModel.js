@@ -1,8 +1,10 @@
-let mongoose = require('mongoose'),
-    { Schema } = mongoose,
-    shortId = require('shortid');
+'use strict';
 
-let OptionSchema = new Schema({
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var shortId = require('shortid');
+
+var OptionSchema = new Schema({
   __v: { type: Number, select: false },
   _id: {
     type: String,
