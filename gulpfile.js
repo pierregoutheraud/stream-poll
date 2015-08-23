@@ -163,5 +163,5 @@ gulp.task('dev', ['css', 'webpack-dev-server', 'watch'])
 
 // waits until clean is finished then builds the project
 gulp.task('build', ['clean'], function(){
-  gulp.start(['images', 'scripts', 'css', 'html']);
+  gulp.start(['images', 'scripts', 'css', 'html', 'server']);
 });

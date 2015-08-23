@@ -3,7 +3,6 @@ let express =    require('express'),
     path =       require('path'),
     os =         require('os'),
     bodyParser = require('body-parser'),
-    socketService = require('./socketService'),
     _ = require('underscore');
 
 let app = express(),
