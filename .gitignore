@@ -1,7 +1,6 @@
 node_modules
 app/bower_components
 app/bundles
-app/scripts/config/config.js
 *.log
 *.swp
 *.swo

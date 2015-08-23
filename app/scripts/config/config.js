@@ -1,5 +1,5 @@
 var CONFIG = {
-  ENV:  window.location.host === 'localhost:9999' ? 'dev' : prod,
+  ENV:  window.location.host === 'localhost:9999' ? 'dev' : 'prod',
 };
 
 if (CONFIG.ENV === 'dev') {

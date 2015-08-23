@@ -14,6 +14,8 @@ var express = require('express'),
 var app = express(),
     router = express.Router();
 
+app.use('/', express['static']('build'));
+
 // Models
 var PollModel = require('./models/PollModel.js');
 var OptionModel = require('./models/OptionModel.js');
