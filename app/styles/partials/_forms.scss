@@ -19,6 +19,31 @@ textarea {
 
 }
 
+input.input {
+  padding: 0 15px;
+  height: 30px;
+}
+
+.input-group {
+
+  display: inline-block;
+
+  .input {
+    height: 30px;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .btn {
+    height: 30px;
+    padding: 0 20px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+}
+
 /* --- buttons --- */
 
 .btn {

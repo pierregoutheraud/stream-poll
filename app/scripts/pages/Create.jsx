@@ -60,10 +60,10 @@ var Home = React.createClass({
     };
 
     if (data.question.length && data.options.length > 1) {
-      // this.setState({ creating: true });
+      this.setState({ creating: true });
 
       api.postPoll(data).then((poll) => {
-        this.transitionTo('/' + user.username + '/' + poll._id);
+        this.transitionTo('/' + this.props.params.username + '/' + poll._id);
       });
 
     } else {

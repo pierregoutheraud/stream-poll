@@ -4,7 +4,8 @@ import Layout from 'pages/Layout.jsx';
 import Home from 'pages/Home.jsx';
 import Create from 'pages/Create.jsx';
 import Vote from 'pages/Vote.jsx';
-import PollResults from 'pages/PollResults.jsx';
+import Results from 'pages/Results.jsx';
+import Login from 'pages/Login.jsx';
 
 import { Router, Route } from 'react-router';
 import { history } from 'react-router/lib/BrowserHistory';
@@ -13,13 +14,16 @@ React.render((
 
   <Router history={history}>
 
-    <Route path="/" component={Home} ></Route>
+    <Route path="/" name="home" component={Home} ></Route>
 
-    <Route path="/:username" component={Layout} >
+    <Route path="/login" name="login" component={Login} ></Route>
+
+    <Route path="/:username" name="layout" component={Layout} >
       <Route path="/c" name="create" component={Create} ></Route>
       <Route path="/:id" name="poll" component={Vote} ></Route>
-      <Route path="/:id/r" name="results" component={PollResults} ></Route>*/
+      <Route path="/:id/r" name="results" component={Results} ></Route>
     </Route>
+
 
   </Router>
 

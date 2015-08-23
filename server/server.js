@@ -3,7 +3,8 @@ let express =    require('express'),
     path =       require('path'),
     os =         require('os'),
     bodyParser = require('body-parser'),
-    socketService = require('./socketService');
+    socketService = require('./socketService'),
+    _ = require('underscore');
 
 let app = express(),
     router = express.Router();
@@ -89,11 +90,19 @@ class DataBase {
 }
 
 class User {
-  constructor(data) {
+
+  constructor (data, socket) {
     this.id = data.id;
     this.username = data.username;
     this.streamer = data.streamer;
+    this.socket = socket;
+    this.polls = [];
   }
+
+  subscribeToStreamer (streamerUsername) {
+    this.subscribeToStreamer = streamerUsername;
+  }
+
 }
 
 class Api {
@@ -112,11 +121,13 @@ class Api {
       console.log('Socket connected!');
 
       let user;
-      socket.on('user:new', (data) => {
-        user = new User(data);
-        this.users.push(user);
-      });
 
+      socket.on('user:new', (data) => {
+        console.log('new user', data);
+        user = new User(data, socket);
+        this.users.push(user);
+        socket.emit('user:new', data);
+      });
 
       /* New POLL */
       socket.on('poll:new', (data) => {
@@ -132,7 +143,9 @@ class Api {
         this.db.saveOptionsAndPoll(options, poll, () => {
           this.db.savePoll(poll).then((poll) => {
 
+            user.polls.push(poll); // Save poll of streamer
             socket.emit('poll:new', poll);
+            this.notifySubscribers(user, poll);
 
           });
         });
@@ -177,12 +190,11 @@ class Api {
           let query = PollModel.findOne().where('_id').equals(poll_id);
           query.exec().addBack((err, poll) => {
             let options = [value];
-            this.db.saveOptionsAndPoll(options, poll, function(options){ // Save option and vote at same time with last param at true
+            this.db.saveOptionsAndPoll(options, poll, (options) => { // Save option and vote at same time with last param at true
               let option = options[0]; // Since we only saved 1 new option
               this.db.savePoll(poll).then((poll) => {
                 socket.emit('vote:new', option);
-                // socketService.newVote(poll_id, option_id, option.votes);
-
+                this.newVote(poll_id, option_id, option.votes);
               });
             }, true);
           });
@@ -191,22 +203,88 @@ class Api {
 
           console.log('Existing option, we vote for it');
 
-          this.db.vote(option_id, function(option){
+          this.db.vote(option_id, (option) => {
             socket.emit('vote:new', option);
-            // socketService.newVote(poll_id, option_id, option.votes);
+            this.newVote(poll_id, option_id, option.votes);
           });
 
         }
 
       });
 
+      socket.on('subscribeTo:poll', (data) => {
+        user.poll_id = data.id;
+        console.log('user subscribed to poll', user.socket.id);
+      });
+
+      socket.on('subscribeTo:streamer', (streamer) => {
+        user.subscribeToStreamer(streamer.username);
+        this.notifySubscriber(user);
+        console.log('user subscribed to streamer', streamer.username);
+      });
+
       socket.on('disconnect', () => {
         console.log('Socket disconnected.');
-        // this.removeUser(user);
+        this.removeUser(user);
       });
 
     });
 
+  }
+
+  notifySubscriber (user) {
+    console.log(this.users);
+    let streamer = _.findWhere(this.users, {username: user.subscribeToStreamer});
+
+    // If streamer is connected
+    if (streamer) {
+
+      let lastPoll = streamer.polls[ streamer.polls.length - 1 ]; // get current poll (last one)
+
+      // If at least one poll created
+      if (lastPoll) {
+        user.socket.emit('streamer:newPoll', {
+          _id: lastPoll._id
+        });
+      }
+    }
+  }
+
+  notifySubscribers (streamer, poll) {
+
+    let subscribers = _.where(this.users, {subscribeToStreamer: streamer.username});
+    subscribers.forEach((subscriber, i) => {
+      console.log('subscriber ' + subscriber.socket.id + ' has been notified about new poll ' + poll._id);
+      subscriber.socket.emit('streamer:newPoll', {
+        _id: poll._id
+      });
+    });
+
+  }
+
+  newVote(poll_id, option_id, votes) {
+    console.log('new vote !');
+    for (let i=0,l=this.users.length;i<l;i++) {
+      let user = this.users[i];
+      if (user.poll_id == poll_id) {
+        let data = {
+          option_id: option_id,
+          votes: votes
+        };
+        user.socket.emit('poll:update', data);
+      }
+    }
+  }
+
+  removeUser (user) {
+    if (typeof user === 'undefined') return false;
+    for (let i=0,l=this.users.length;i<l;i++) {
+      if (user.socket.id == this.users[i].socket.id) {
+        console.log('remove poll !', i);
+        this.users.splice(i,1);
+        break;
+      }
+    }
   }
 
 }

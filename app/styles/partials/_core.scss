@@ -33,6 +33,13 @@ ul, li {
   list-style-type: none;
 }
 
+.link {
+  color: black;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 /* ---------------- */
 
 .app {
@@ -56,12 +63,20 @@ ul, li {
     left: 0;
     right: 45%;
     background-color: black;
+    z-index: 2;
   }
 
   &__chat {
     left: 55%;
     right: 22.5%;
     background-color: #ccc;
+    z-index: 1;
+  }
+
+  &--only-video {
+    .app__video {
+      right: 22.5%;
+    }
   }
 
   .stream-poll {
@@ -74,7 +89,22 @@ ul, li {
 
 /* ---------------- */
 
+.loading {
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  text-align: center;
+
+  p {
+    margin-top: 50px;
+  }
+}
+
 .content {
+  // height: calc(100% - 60px);
   padding: 20px;
   text-align: center;
   position: relative;

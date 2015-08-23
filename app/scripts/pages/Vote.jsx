@@ -2,6 +2,7 @@ import React from 'react/addons';
 import { Link, Router, Navigation } from 'react-router';
 import api from 'utils/WebsocketApi.js';
 import Loading from 'pages/Loading.jsx';
+import user from 'Models/User.js';
 
 let Vote = React.createClass({
 
@@ -69,7 +70,7 @@ let Vote = React.createClass({
 
     this.setState({ voting: true });
     api.vote(poll_id, option_id, value).then((option) => {
-      this.transitionTo('/'+poll_id+'/r');
+      this.transitionTo('/' + this.props.params.username + '/' + poll_id + '/r');
     });
   },
 
@@ -135,7 +136,7 @@ let Vote = React.createClass({
 
         <footer>
           <button type="submit" className="btn btn--green" onClick={onClickVote} >{voteText}</button>
-          <Link className="btn btn--black" to={"/"+this.state.id+"/r"} >results</Link>
+          <Link className="btn btn--black" to={"/"+this.props.params.username+"/"+this.state.id+"/r"} >results</Link>
         </footer>
 
       </div>

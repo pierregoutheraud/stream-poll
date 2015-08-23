@@ -9,8 +9,10 @@
 @import "partials/core";
 @import "partials/forms";
 @import "partials/header";
+@import "partials/popover";
 
 // import pages
+@import "partials/home";
 @import "partials/create";
 @import "partials/poll";
 @import "partials/poll-results";

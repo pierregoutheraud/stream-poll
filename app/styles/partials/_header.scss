@@ -1,7 +1,8 @@
-.stream-poll > header {
+.stream-poll > header, .logo-header {
   height: 60px;
   background-color: #333333;
-  a {
+  position: relative;
+  a.logo {
     display: block;
     width: 100%;
     height: 100%;

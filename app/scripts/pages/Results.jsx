@@ -1,9 +1,10 @@
 import React from 'react/addons';
-import api from 'utils/Api.js';
+import api from 'utils/WebsocketApi.js';
 import CONFIG from 'config/config.js';
 import _ from 'underscore';
 import { Link } from 'react-router';
 import Loading from 'pages/Loading.jsx';
+import user from 'Models/User.js';
 
 var PollResults = React.createClass({
 
@@ -20,6 +21,9 @@ var PollResults = React.createClass({
     console.log('poll results componentWillMount');
 
     api.getPoll( this.props.params.id ).then((poll) => {
+
+      console.log(poll);
+
       this.connectSocket();
       this.setState({
         id: poll._id,
@@ -31,19 +35,15 @@ var PollResults = React.createClass({
   },
 
   connectSocket: function() {
-    let socket = io.connect(CONFIG.SOCKET_ENDPOINT, {'forceNew': true});
-    socket.on('connect', () => {
-      console.log('Websocket connected !');
-      socket.emit('poll', { id: this.props.params.id });
-    });
-    socket.on('vote:new', (data) => {
+
+    api.subscribeToPoll(this.props.params.id, (data) => {
       let { option_id, votes } = data;
       let option = _.findWhere(this.state.options, {_id:option_id});
       option.votes = votes;
       this.setState({
         options: this.state.options
       });
-    });
+    })
   },
 
   render: function() {
@@ -78,6 +78,19 @@ var PollResults = React.createClass({
       );
     });
 
+    let footer = null;
+    if (user.streamer) {
+      footer = (
+        <footer>
+          {
+            // <Link className="btn btn--black" to={"/"+this.props.params.username+"/"+this.state.id} >back to vote</Link>
+          }
+          <Link className="btn btn--black" to={"/"+this.props.params.username+"/c"} >create new poll</Link>
+        </footer>
+      );
+    }
+
+
     return (
       <div className="poll-results">
 
@@ -87,11 +100,9 @@ var PollResults = React.createClass({
           {options}
         </ul>
 
-        <div className="total">Total: <strong>{totalVotes} votes</strong></div>
+        <div className="total">Total: <strong>{totalVotes} {totalVotes > 1 ? "votes" : "vote"}</strong></div>
 
-        <footer>
-          <Link className="btn btn--black" to={"/"} >create new poll</Link>
-        </footer>
+        { footer }
 
       </div>
     );

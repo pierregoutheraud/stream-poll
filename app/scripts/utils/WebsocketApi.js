@@ -6,13 +6,31 @@ import user from 'Models/User.js';
 class Api {
 
   constructor() {
-    this.socket = io.connect(CONFIG.SOCKET_ENDPOINT, {'forceNew': true});
+    this.socket = io.connect(CONFIG.SOCKET_ENDPOINT);
     this.socket.on('connect', () => {
       console.log('Websocket connected !');
     });
   }
 
-  newUser() {
+  subscribeToPoll(id, callback) {
+    this.socket.emit('subscribeTo:poll', {id});
+    this.socket.on('poll:update', (data) => {
+      callback(data);
+    });
+  }
+
+  listenToStreamer( user, streamerUsername, callback ) {
+    // return new Promise((resolve, reject) => {
+      if (!user.streamer) {
+        this.socket.on('streamer:newPoll', (data) => {
+          callback(data);
+        });
+        this.socket.emit('subscribeTo:streamer', {username:streamerUsername});
+      }
+    // });
+  }
+
+  newUser( streamerUsername ) {
     let data = {
       id: user.id,
       username: user.username,
@@ -23,16 +41,6 @@ class Api {
 
   postPoll (data) {
     return this.emit('poll:new', data);
-  }
-
-  emit (eventName, data={}) {
-    return new Promise((resolve, reject) => {
-      console.log('WebsocketApi emit', eventName, data);
-      this.socket.emit(eventName, data);
-      this.socket.on(eventName, function(data) {
-        resolve(data);
-      })
-    });
   }
 
   getPoll (poll_id) {
@@ -53,6 +61,16 @@ class Api {
       };
     }
     return this.emit('vote:new', data);
+  }
+
+  emit (eventName, data={}) {
+    return new Promise((resolve, reject) => {
+      console.log('WebsocketApi emit', eventName, data);
+      this.socket.emit(eventName, data);
+      this.socket.on(eventName, function(data) {
+        resolve(data);
+      })
+    });
   }
 
 }
