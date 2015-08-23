@@ -374,7 +374,7 @@ app.use('/api', router);
 
 */
 
-let server = app.listen(10000, function () {
+let server = app.listen(process.env.PORT || 10000, function () {
   let host = server.address().address;
   let port = server.address().port;
   console.log(`Listening at http://127.0.0.1:${port}/api`);
