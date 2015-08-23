@@ -90,14 +90,20 @@ var Home = React.createClass({
       onClickSubmit = null;
     }
 
+    let currentURL = window.location.origin + "/" + this.props.params.username;
+
     return (
 
       <div className="create">
 
-        <p className="advice" >Ask a question to your viewers<br/>and find out what they think.</p>
+        <p className="advice" >
+          Share this url with your viewers: <a href={currentURL} >{currentURL}</a><br/><br/>
+          Ask a question to your viewers<br/>
+          and find out what they think.
+        </p>
 
           <textarea
-            placeholder="Type your question here"
+            placeholder="Type a question for your viewers"
             type="text"
             ref="question"
             onChange={this.onChangeQuestion}
