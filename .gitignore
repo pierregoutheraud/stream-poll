@@ -5,4 +5,7 @@ app/scripts/config/config.js
 *.log
 *.swp
 *.swo
-build
+build/css
+build/images
+build/js
+build/index.html
