@@ -1,13 +1,14 @@
 import _twitch_ from 'twitch-sdk/twitch.min.js';
 import user from 'Models/User.js';
 import store from 'store';
+import CONFIG from 'config/config.js';
 
 class TwitchSDK {
 
   constructor () {
 
     Twitch.init({
-      clientId: 'px7pb4sktw8jxje799wioymtiyytdam'
+      clientId: CONFIG.TWITCH_CLIENT_ID
     }, (error, status) => {
       if (error) console.error( error );
     });
@@ -46,10 +47,9 @@ class TwitchSDK {
 
     if (login_redirect === null) login_redirect = window.location.pathname;
     store.set('login_redirect', login_redirect);
-
     Twitch.login({
       // scope: ['user_read', 'channel_read']
-      redirect_uri: 'http://localhost:9999/login',
+      // redirect_uri: window.location.origin + '/login',
       popup: false,
       scope: ['user_read']
     });
