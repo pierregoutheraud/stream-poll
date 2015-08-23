@@ -1,5 +1,4 @@
 import React from 'react/addons';
-import api from 'utils/Api.js';
 import { Link, Router, Navigation } from 'react-router';
 // import _twitch_ from 'twitch-sdk/twitch.min.js';
 import TwitchSDK from 'utils/TwitchSDK.js';

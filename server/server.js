@@ -18,7 +18,7 @@ const TEMP_PATH = path.normalize(__dirname + '/temp');
 let os_hostname = os.hostname();
 
 const MONGOOSE_CONNECT = 'mongodb://pierre:microst7@apollo.modulusmongo.net:27017/iqYj5uto';
-var connection = mongoose.connect(MONGOOSE_CONNECT);
+let connection = mongoose.connect(MONGOOSE_CONNECT);
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -374,10 +374,12 @@ app.use('/api', router);
 
 */
 
-let server = app.listen(process.env.PORT || 10000, function () {
+let server_port = process.env.PORT || 10000;
+// let server_host = process.env.YOUR_HOST || '0.0.0.0';
+let server = app.listen(server_port, function () {
   let host = server.address().address;
   let port = server.address().port;
-  console.log(`Listening at http://127.0.0.1:${port}/api`);
+  console.log(`Listening at ${host}:${port}`);
 });
 
 // socketService.start(server);
