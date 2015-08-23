@@ -4,7 +4,3 @@ app/bundles
 *.log
 *.swp
 *.swo
-build/css
-build/images
-build/js
-build/index.html
