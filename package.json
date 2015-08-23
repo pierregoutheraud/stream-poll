@@ -17,7 +17,6 @@
     "core-js": "^0.9.18",
     "del": "^1.2.0",
     "event-stream": "^3.3.1",
-    "express": "^4.13.1",
     "gulp": "^3.8.11",
     "gulp-autoprefixer": "^2.1.0",
     "gulp-babel": "^5.1.0",
@@ -54,6 +53,7 @@
     "webpack-stream": "^2.0.0"
   },
   "dependencies": {
+    "express": "^4.13.1",
     "body-parser": "^1.13.3",
     "moment": "^2.10.3",
     "mongoose": "^4.1.3",
