@@ -8,7 +8,8 @@ let express =    require('express'),
 let app = express(),
     router = express.Router();
 
-app.use('/', express.static('build'));
+app.use(express.static('build'));
+app.use('/:url', express.static('build/index.html'));
 
 // Models
 let PollModel = require('./models/PollModel.js');
