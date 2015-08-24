@@ -4,3 +4,4 @@ app/bundles
 *.log
 *.swp
 *.swo
+.DS_Store
