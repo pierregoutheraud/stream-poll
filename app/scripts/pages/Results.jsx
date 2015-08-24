@@ -65,7 +65,25 @@ var PollResults = React.createClass({
         width: percentage + '%'
       };
       return (
-        <li key={i} className="option home__option" >
+        <li key={i} className="option option--result" >
+
+          <table>
+            <tr>
+              <td className="option__case" >{i+1}</td>
+              <td className="option__value" >{ option.value }</td>
+            </tr>
+            <tr >
+              <td className="option__results" colSpan="2" >
+                <div className="option__results__bar">
+                  <div className="option__results__bar__progress" style={styleProgressbar} ></div>
+                </div>
+                <div className="option__results__votes"><strong>{ option.votes } { option.votes > 1 ? 'votes' : 'vote' }</strong> ({percentage}%)</div>
+              </td>
+            </tr>
+          </table>
+
+          {
+          /*
           <div className="option__case">{i+1}</div>
           <span className="option__value">{ option.value }</span>
           <div className="option__results">
@@ -74,6 +92,8 @@ var PollResults = React.createClass({
             </div>
             <div className="option__results__votes"><strong>{ option.votes } { option.votes > 1 ? 'votes' : 'vote' }</strong> ({percentage}%)</div>
           </div>
+          */
+          }
         </li>
       );
     });

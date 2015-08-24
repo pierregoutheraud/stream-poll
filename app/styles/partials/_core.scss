@@ -83,6 +83,8 @@ ul, li {
     left: 77.5%;
     right: 0;
     overflow: auto;
+    // border: 2px solid $black;
+    // border-bottom: none;
 
     &__waiting {
       p {
@@ -223,23 +225,20 @@ ul, li {
 
   &__results {
 
-  @extend .clearfix;
+  // @extend .clearfix;
   height: $resultsHeight;
   width: 100%;
-
-  position: relative;
-  top: -1px;
   z-index: 2;
-  // background-color: white;
-  padding-left: 36px;
+
+  // position: relative;
+  // top: -1px;
+
+  border: 1px solid percent-color(90);
 
     &__bar {
-      display: inline-block;
-      vertical-align: middle;
+      float: left;
       width: 50%;
-      height: 100%;
-      // float: left;
-      // background-color: rgba(0,0,0,.1);
+      height: $resultsHeight;
       background-color: percent-color(90);
       position: relative;
       &__progress {
@@ -254,17 +253,46 @@ ul, li {
     }
 
     &__votes {
+      float: right;
       font-size: 14px;
       height: $resultsHeight;
       line-height: $resultsHeight;
-      display: inline-block;
-      vertical-align: middle;
       width: 50%;
-      border-bottom: 1px solid rgba(0,0,0,.1);
-      border-right: 1px solid rgba(0,0,0,.1);
 
       strong {
         font-weight: 700;
+      }
+    }
+
+  }
+
+
+  &--result {
+
+    table {
+      table-layout:fixed;
+      border-collapse: collapse;
+      width: 100%;
+
+      td {
+        overflow: hidden;
+      }
+
+      .option__case {
+        height: auto;
+        line-height: normal;
+        float: none;
+        display: table-cell;
+        // padding: 0 13px;
+        max-width: 10px;
+        border: 1px solid percent-color(90);
+      }
+      .option__value {
+        float: none;
+        height: auto;
+        line-height: normal;
+        display: table-cell;
+        border: 1px solid percent-color(90);
       }
     }
 

@@ -70,7 +70,7 @@ let Vote = React.createClass({
 
     this.setState({ voting: true });
     api.vote(poll_id, option_id, value).then((option) => {
-      this.transitionTo('/' + this.props.params.username + '/' + poll_id + '/r');
+      this.replaceWith('/' + this.props.params.username + '/' + poll_id + '/r');
     });
   },
 
