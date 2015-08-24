@@ -97,7 +97,7 @@ var Home = React.createClass({
       <div className="create">
 
         <p className="advice" >
-          Share this url with your viewers: <a href={currentURL} >{currentURL}</a><br/><br/>
+          Share this url with your viewers: <a href={currentURL} className="link" >{currentURL}</a><br/><br/>
           Ask a question to your viewers<br/>
           and find out what they think.
         </p>
