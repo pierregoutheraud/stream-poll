@@ -8,12 +8,14 @@ let express =    require('express'),
 let app = express(),
     router = express.Router();
 
-app.use(express.static('build'));
-app.use('/:url', express.static('build/index.html'));
+app.use(express.static('build')); // use build file as statics
 
-// Models
-let PollModel = require('./models/PollModel.js');
-let OptionModel = require('./models/OptionModel.js');
+// Mongo Models
+let PollModel = require('./models/PollModel.js'),
+    OptionModel = require('./models/OptionModel.js');
+
+// Classes
+let DataBase = require('./DataBase.js');
 
 const FILES_PATH = path.normalize(__dirname + '/files');
 const TEMP_PATH = path.normalize(__dirname + '/temp');
@@ -33,63 +35,6 @@ app.use(function(req, res, next) {
 app.use(bodyParser.json())
 
 /* Websocket API */
-
-class DataBase {
-
-  savePoll (poll) {
-    return new Promise((resolve, reject) => {
-      console.log('saving poll...');
-      poll.save(function(err, poll){
-        if (err) reject(err);
-        PollModel.populate(poll, {path:"options"}, function(err, poll) {
-          if (err) reject(err);
-          console.log('poll saved. RESOLVE :O');
-          resolve(poll);
-        });
-      });
-    });
-  }
-
-  // Save options from array and push them to poll
-  saveOptionsAndPoll (optionsToSave, poll, callback, vote=false, optionsSaved=[]) {
-    console.log(`saveOptionsAndPoll [${optionsSaved.length}]`);
-    let optionValue = optionsToSave[optionsSaved.length]; // we get first option value of queue
-    let option = new OptionModel({
-      value: optionValue,
-      votes: vote ? 1 : 0
-    });
-    console.log('Saving option '+optionValue+'...');
-    option.save((err, option) => {
-      console.log('option '+optionValue+' saved.');
-      optionsSaved.push(option);
-      poll.options.push(option._id);
-
-      console.log( 'optionsToSave[optionsSaved.length]', optionsToSave[optionsSaved.length], optionsSaved.length );
-
-      if (optionsToSave[optionsSaved.length]) {
-
-        console.log('this.saveOptionsAndPoll');
-
-        this.saveOptionsAndPoll(optionsToSave, poll, callback, vote, optionsSaved);
-      } else {
-        callback(optionsSaved);
-      }
-    });
-  }
-
-  vote ( option_id, callback ) {
-    console.log( 'vote for ' + option_id );
-    let query = OptionModel.findOne().where('_id').equals(option_id);
-    query.exec().addBack((err, option) => {
-      console.log(option);
-      option.votes++;
-      option.save(function(err, option){
-        callback(option);
-      });
-    });
-  }
-
-}
 
 class User {
 
@@ -291,98 +236,17 @@ class Api {
 
 }
 
-/*
-router.route('/poll')
-
-  .post(function(req,res) {
-
-    let { question, options } = req.body;
-
-    let poll = new PollModel({
-      question: question
-    });
-
-    saveOptionsAndPoll(options, poll, function(){
-      savePoll(poll).then((poll) => {
-        res.json(poll);
-      });
-    });
-
-  });
-
-router.route('/poll/:id')
-
-  .get(function(req, res, next) {
-
-    let poll_id = req.params.id;
-    let query = PollModel.findOne().where('_id').equals(poll_id).populate('options')
-    query.exec().addBack((err, poll) => {
-      if (err) console.error(err)
-
-      if (!poll) {
-        res.status(404).json({
-          error: 'Poll not found'
-        });
-      }
-      else {
-        res.json(poll);
-      }
-    });
-
-  });
-
-router.route('/vote')
-
-  // Vote
-  .post(function(req, res, next) {
-
-    let { option_id, poll_id, value } = req.body;
-
-    if (typeof poll_id === 'undefined') {
-      res.json({ error: 'Missing parameters.' });
-      return false;
-    }
-
-    if (typeof value !== 'undefined') {
-
-      console.log('Create new option and save it to poll');
-
-      let query = PollModel.findOne().where('_id').equals(poll_id);
-      query.exec().addBack((err, poll) => {
-        let options = [value];
-        saveOptionsAndPoll(options, poll, function(options){ // Save option and vote at same time with last param at true
-          let option = options[0]; // Since we only saved 1 new option
-          savePoll(poll).then((poll) => {
-            res.json(option);
-            // socketService.newVote(poll_id, option_id, option.votes);
-
-          });
-        }, true);
-      });
-
-    } else {
-
-      console.log('Existing option, we vote for it');
-
-      vote(option_id, function(option){
-        res.json(option);
-        // socketService.newVote(poll_id, option_id, option.votes);
-      });
-
-    }
-
-  });
-
-app.use('/api', router);
-
-*/
-
 let server_port = process.env.PORT || 10000;
 // let server_host = process.env.YOUR_HOST || '0.0.0.0';
 let server = app.listen(server_port, function () {
   let host = server.address().address;
   let port = server.address().port;
   console.log(`Listening at ${host}:${port}`);
+});
+
+// Every routes to index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../index.html'))
 });
 
 // socketService.start(server);
