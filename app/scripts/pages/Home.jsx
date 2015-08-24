@@ -52,7 +52,7 @@ var Home = React.createClass({
 
               <div className="home__col">
                 <h2>You are a viewer</h2>
-                <p>Type the streamer username you want to watch</p>
+                <p>Watch your favorite streamer and give him your opinion</p>
 
                 <div className="input-group">
                   <input ref="streamerUsername" type="text" className="input" placeholder="streamer username"/>
