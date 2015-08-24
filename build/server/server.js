@@ -14,12 +14,14 @@ var express = require('express'),
 var app = express(),
     router = express.Router();
 
-app.use(express['static']('build'));
-app.use('/:url', express['static']('build/index.html'));
+app.use(express['static']('build')); // use build file as statics
 
-// Models
-var PollModel = require('./models/PollModel.js');
-var OptionModel = require('./models/OptionModel.js');
+// Mongo Models
+var PollModel = require('./models/PollModel.js'),
+    OptionModel = require('./models/OptionModel.js');
+
+// Classes
+var DataBase = require('./DataBase.js');
 
 var FILES_PATH = path.normalize(__dirname + '/files');
 var TEMP_PATH = path.normalize(__dirname + '/temp');
@@ -39,78 +41,6 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json());
 
 /* Websocket API */
-
-var DataBase = (function () {
-  function DataBase() {
-    _classCallCheck(this, DataBase);
-  }
-
-  _createClass(DataBase, [{
-    key: 'savePoll',
-    value: function savePoll(poll) {
-      return new Promise(function (resolve, reject) {
-        console.log('saving poll...');
-        poll.save(function (err, poll) {
-          if (err) reject(err);
-          PollModel.populate(poll, { path: "options" }, function (err, poll) {
-            if (err) reject(err);
-            console.log('poll saved. RESOLVE :O');
-            resolve(poll);
-          });
-        });
-      });
-    }
-
-    // Save options from array and push them to poll
-  }, {
-    key: 'saveOptionsAndPoll',
-    value: function saveOptionsAndPoll(optionsToSave, poll, callback) {
-      var _this = this;
-
-      var vote = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
-      var optionsSaved = arguments.length <= 4 || arguments[4] === undefined ? [] : arguments[4];
-
-      console.log('saveOptionsAndPoll [' + optionsSaved.length + ']');
-      var optionValue = optionsToSave[optionsSaved.length]; // we get first option value of queue
-      var option = new OptionModel({
-        value: optionValue,
-        votes: vote ? 1 : 0
-      });
-      console.log('Saving option ' + optionValue + '...');
-      option.save(function (err, option) {
-        console.log('option ' + optionValue + ' saved.');
-        optionsSaved.push(option);
-        poll.options.push(option._id);
-
-        console.log('optionsToSave[optionsSaved.length]', optionsToSave[optionsSaved.length], optionsSaved.length);
-
-        if (optionsToSave[optionsSaved.length]) {
-
-          console.log('this.saveOptionsAndPoll');
-
-          _this.saveOptionsAndPoll(optionsToSave, poll, callback, vote, optionsSaved);
-        } else {
-          callback(optionsSaved);
-        }
-      });
-    }
-  }, {
-    key: 'vote',
-    value: function vote(option_id, callback) {
-      console.log('vote for ' + option_id);
-      var query = OptionModel.findOne().where('_id').equals(option_id);
-      query.exec().addBack(function (err, option) {
-        console.log(option);
-        option.votes++;
-        option.save(function (err, option) {
-          callback(option);
-        });
-      });
-    }
-  }]);
-
-  return DataBase;
-})();
 
 var User = (function () {
   function User(data, socket) {
@@ -142,96 +72,10 @@ var Api = (function () {
     this.start();
   }
 
-  /*
-  router.route('/poll')
-  
-    .post(function(req,res) {
-  
-      let { question, options } = req.body;
-  
-      let poll = new PollModel({
-        question: question
-      });
-  
-      saveOptionsAndPoll(options, poll, function(){
-        savePoll(poll).then((poll) => {
-          res.json(poll);
-        });
-      });
-  
-    });
-  
-  router.route('/poll/:id')
-  
-    .get(function(req, res, next) {
-  
-      let poll_id = req.params.id;
-      let query = PollModel.findOne().where('_id').equals(poll_id).populate('options')
-      query.exec().addBack((err, poll) => {
-        if (err) console.error(err)
-  
-        if (!poll) {
-          res.status(404).json({
-            error: 'Poll not found'
-          });
-        }
-        else {
-          res.json(poll);
-        }
-      });
-  
-    });
-  
-  router.route('/vote')
-  
-    // Vote
-    .post(function(req, res, next) {
-  
-      let { option_id, poll_id, value } = req.body;
-  
-      if (typeof poll_id === 'undefined') {
-        res.json({ error: 'Missing parameters.' });
-        return false;
-      }
-  
-      if (typeof value !== 'undefined') {
-  
-        console.log('Create new option and save it to poll');
-  
-        let query = PollModel.findOne().where('_id').equals(poll_id);
-        query.exec().addBack((err, poll) => {
-          let options = [value];
-          saveOptionsAndPoll(options, poll, function(options){ // Save option and vote at same time with last param at true
-            let option = options[0]; // Since we only saved 1 new option
-            savePoll(poll).then((poll) => {
-              res.json(option);
-              // socketService.newVote(poll_id, option_id, option.votes);
-  
-            });
-          }, true);
-        });
-  
-      } else {
-  
-        console.log('Existing option, we vote for it');
-  
-        vote(option_id, function(option){
-          res.json(option);
-          // socketService.newVote(poll_id, option_id, option.votes);
-        });
-  
-      }
-  
-    });
-  
-  app.use('/api', router);
-  
-  */
-
   _createClass(Api, [{
     key: 'start',
     value: function start() {
-      var _this2 = this;
+      var _this = this;
 
       var io = require('socket.io')(server);
       io.on('connection', function (socket) {
@@ -243,7 +87,7 @@ var Api = (function () {
         socket.on('user:new', function (data) {
           console.log('new user', data);
           user = new User(data, socket);
-          _this2.users.push(user);
+          _this.users.push(user);
           socket.emit('user:new', data);
         });
 
@@ -258,12 +102,12 @@ var Api = (function () {
             question: question
           });
 
-          _this2.db.saveOptionsAndPoll(options, poll, function () {
-            _this2.db.savePoll(poll).then(function (poll) {
+          _this.db.saveOptionsAndPoll(options, poll, function () {
+            _this.db.savePoll(poll).then(function (poll) {
 
               user.polls.push(poll); // Save poll of streamer
               socket.emit('poll:new', poll);
-              _this2.notifySubscribers(user, poll);
+              _this.notifySubscribers(user, poll);
             });
           });
         });
@@ -305,12 +149,12 @@ var Api = (function () {
             var query = PollModel.findOne().where('_id').equals(poll_id);
             query.exec().addBack(function (err, poll) {
               var options = [value];
-              _this2.db.saveOptionsAndPoll(options, poll, function (options) {
+              _this.db.saveOptionsAndPoll(options, poll, function (options) {
                 // Save option and vote at same time with last param at true
                 var option = options[0]; // Since we only saved 1 new option
-                _this2.db.savePoll(poll).then(function (poll) {
+                _this.db.savePoll(poll).then(function (poll) {
                   socket.emit('vote:new', option);
-                  _this2.newVote(poll_id, option_id, option.votes);
+                  _this.newVote(poll_id, option_id, option.votes);
                 });
               }, true);
             });
@@ -318,9 +162,9 @@ var Api = (function () {
 
             console.log('Existing option, we vote for it');
 
-            _this2.db.vote(option_id, function (option) {
+            _this.db.vote(option_id, function (option) {
               socket.emit('vote:new', option);
-              _this2.newVote(poll_id, option_id, option.votes);
+              _this.newVote(poll_id, option_id, option.votes);
             });
           }
         });
@@ -332,13 +176,13 @@ var Api = (function () {
 
         socket.on('subscribeTo:streamer', function (streamer) {
           user.subscribeToStreamer(streamer.username);
-          _this2.notifySubscriber(user);
+          _this.notifySubscriber(user);
           console.log('user subscribed to streamer', streamer.username);
         });
 
         socket.on('disconnect', function () {
           console.log('Socket disconnected.');
-          _this2.removeUser(user);
+          _this.removeUser(user);
         });
       });
     }
@@ -411,6 +255,11 @@ var server = app.listen(server_port, function () {
   var host = server.address().address;
   var port = server.address().port;
   console.log('Listening at ' + host + ':' + port);
+});
+
+// Every routes to index.html
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, '../index.html'));
 });
 
 // socketService.start(server);
