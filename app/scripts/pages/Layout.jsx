@@ -24,8 +24,6 @@ var Layout = React.createClass({
 
       console.log(user);
 
-      this.setState({ loading: false });
-
       if (user.authenticated) {
 
         api.newUser( this.props.params.username ).then((user) => {
@@ -35,14 +33,19 @@ var Layout = React.createClass({
           this.listenToStreamer(user);
 
           if (typeof this.props.children === 'undefined' && user.streamer) {
-            this.transitionTo('/'+this.props.params.username+'/c');
+            this.replaceWith('/'+this.props.params.username+'/c');
           }
+
+          this.setState({ loading: false });
 
         });
 
       } else {
 
-        this.setState({ loginPopover: true });
+        this.setState({
+          loginPopover: true,
+          loading: false
+        });
 
         // Create temporary user
         api.newUser( this.props.params.username ).then((user) => {
@@ -137,7 +140,7 @@ var Layout = React.createClass({
 
         <div className="stream-poll">
 
-          <header>
+          <header className="logo-header" >
             <Link to={"/"} className="logo" ></Link>
           </header>
 
