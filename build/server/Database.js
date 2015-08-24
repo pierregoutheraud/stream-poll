@@ -7,12 +7,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var PollModel = require('./models/PollModel.js'),
     OptionModel = require('./models/OptionModel.js');
 
-var DataBase = (function () {
-  function DataBase() {
-    _classCallCheck(this, DataBase);
+var Database = (function () {
+  function Database() {
+    _classCallCheck(this, Database);
   }
 
-  _createClass(DataBase, [{
+  _createClass(Database, [{
     key: 'savePoll',
     value: function savePoll(poll) {
       return new Promise(function (resolve, reject) {
@@ -76,7 +76,7 @@ var DataBase = (function () {
     }
   }]);
 
-  return DataBase;
+  return Database;
 })();
 
-module.exports = DataBase;
+module.exports = Database;

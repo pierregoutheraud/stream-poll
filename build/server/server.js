@@ -21,7 +21,7 @@ var PollModel = require('./models/PollModel.js'),
     OptionModel = require('./models/OptionModel.js');
 
 // Classes
-var DataBase = require('./DataBase.js');
+var Database = require('./Database.js');
 
 var FILES_PATH = path.normalize(__dirname + '/files');
 var TEMP_PATH = path.normalize(__dirname + '/temp');
@@ -263,5 +263,5 @@ app.get('*', function (req, res) {
 });
 
 // socketService.start(server);
-var db = new DataBase();
+var db = new Database();
 var api = new Api(server, db);
