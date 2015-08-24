@@ -141,7 +141,7 @@ class Api {
               let option = options[0]; // Since we only saved 1 new option
               this.db.savePoll(poll).then((poll) => {
                 socket.emit('vote:new', option);
-                this.newVote(poll_id, option_id, option.votes);
+                this.newVote(poll_id, option);
               });
             }, true);
           });
@@ -152,7 +152,7 @@ class Api {
 
           this.db.vote(option_id, (option) => {
             socket.emit('vote:new', option);
-            this.newVote(poll_id, option_id, option.votes);
+            this.newVote(poll_id, option);
           });
 
         }
@@ -209,16 +209,12 @@ class Api {
 
   }
 
-  newVote(poll_id, option_id, votes) {
+  newVote(poll_id, option) {
     console.log('new vote !');
     for (let i=0,l=this.users.length;i<l;i++) {
       let user = this.users[i];
       if (user.poll_id == poll_id) {
-        let data = {
-          option_id: option_id,
-          votes: votes
-        };
-        user.socket.emit('poll:update', data);
+        user.socket.emit('poll:update', option);
       }
     }
   }

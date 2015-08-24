@@ -36,13 +36,23 @@ var PollResults = React.createClass({
 
   connectSocket: function() {
 
-    api.subscribeToPoll(this.props.params.id, (data) => {
-      let { option_id, votes } = data;
-      let option = _.findWhere(this.state.options, {_id:option_id});
-      option.votes = votes;
+    api.subscribeToPoll(this.props.params.id, (dataOption) => {
+
+      console.log( dataOption );
+
+      let option = _.findWhere(this.state.options, {_id:dataOption._id});
+
+      // New option
+      if (typeof option === 'undefined') {
+        this.state.options.push(dataOption);
+      } else {
+        option.votes = dataOption.votes;
+      }
+
       this.setState({
         options: this.state.options
       });
+
     })
   },
 
