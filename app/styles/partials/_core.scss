@@ -83,6 +83,19 @@ ul, li {
     left: 77.5%;
     right: 0;
     overflow: auto;
+
+    &__waiting {
+      p {
+        margin-bottom: 50px;
+        &:last-of-type {
+          margin: 0;
+        }
+      }
+      .twitch-signin {
+        display: block;
+        margin: 10px 0;
+      }
+    }
   }
 
 }

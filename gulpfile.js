@@ -159,7 +159,7 @@ gulp.task('clean', function(cb) {
   del([build + '*'], cb);
 });
 
-gulp.task('dev', ['css', 'webpack-dev-server', 'watch'])
+gulp.task('dev', ['css', 'webpack-dev-server', 'watch', 'watch-server'])
 
 // waits until clean is finished then builds the project
 gulp.task('build', ['clean'], function(){
