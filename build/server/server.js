@@ -154,7 +154,7 @@ var Api = (function () {
                 var option = options[0]; // Since we only saved 1 new option
                 _this.db.savePoll(poll).then(function (poll) {
                   socket.emit('vote:new', option);
-                  _this.newVote(poll_id, option_id, option.votes);
+                  _this.newVote(poll_id, option);
                 });
               }, true);
             });
@@ -164,7 +164,7 @@ var Api = (function () {
 
             _this.db.vote(option_id, function (option) {
               socket.emit('vote:new', option);
-              _this.newVote(poll_id, option_id, option.votes);
+              _this.newVote(poll_id, option);
             });
           }
         });
@@ -219,16 +219,12 @@ var Api = (function () {
     }
   }, {
     key: 'newVote',
-    value: function newVote(poll_id, option_id, votes) {
+    value: function newVote(poll_id, option) {
       console.log('new vote !');
       for (var i = 0, l = this.users.length; i < l; i++) {
         var user = this.users[i];
         if (user.poll_id == poll_id) {
-          var data = {
-            option_id: option_id,
-            votes: votes
-          };
-          user.socket.emit('poll:update', data);
+          user.socket.emit('poll:update', option);
         }
       }
     }
