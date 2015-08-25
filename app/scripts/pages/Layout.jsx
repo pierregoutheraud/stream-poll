@@ -126,19 +126,19 @@ var Layout = React.createClass({
           <div className="popover__background" onClick={this.closeSignin} ></div>
         </div>
 
-        <div className="app__video">
+        <div className="widget widget--twitch-video widget--iframe">
           {
             <iframe src={"http://www.twitch.tv/" + this.props.params.username + "/embed"} frameBorder="0" scrolling="no" ></iframe>
           }
         </div>
 
-        <div className="app__chat">
+        <div className="widget widget--twitch-chat widget--iframe">
           {
             <iframe src={"http://www.twitch.tv/" + this.props.params.username + "/chat?popout="} frameBorder="0" scrolling="no" ></iframe>
           }
         </div>
 
-        <div className="stream-poll">
+        <div className="stream-poll widget">
 
           <header className="logo-header" >
             <Link to={"/"} className="logo" ></Link>
