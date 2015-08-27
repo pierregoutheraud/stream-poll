@@ -108,7 +108,7 @@ gulp.task('sass', function(cb){
     .pipe($.livereload());
 });
 
-gulp.task('css', ['sass'], function (cb) {
+gulp.task('css', ['sass', 'html'], function (cb) {
 
   return gulp.src(build + 'index.html')
     .pipe($.usemin({
@@ -145,6 +145,11 @@ gulp.task('watch-server', ['server'], function() {
   })
 });
 
+gulp.task("copy", function (cb) {
+  return gulp.src('components/fortawesome/font-awesome/v4.4.0/fonts/**/*.*')
+             .pipe(gulp.dest(build + '/fonts'));
+});
+
 // watch styles, html and js file changes
 gulp.task('watch', function() {
   $.livereload.listen({
@@ -163,5 +168,5 @@ gulp.task('dev', ['css', 'webpack-dev-server', 'watch', 'watch-server'])
 
 // waits until clean is finished then builds the project
 gulp.task('build', ['clean'], function(){
-  gulp.start(['images', 'scripts', 'css', 'html', 'server']);
+  gulp.start(['images', 'scripts', 'css', 'server', 'copy']);
 });

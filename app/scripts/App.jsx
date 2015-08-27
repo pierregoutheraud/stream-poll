@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Layout from 'pages/Layout.jsx';
+import Widgets from 'pages/Widgets.jsx';
 import Home from 'pages/Home.jsx';
 import Create from 'pages/Create.jsx';
 import Vote from 'pages/Vote.jsx';
@@ -18,7 +18,7 @@ React.render((
 
     <Route path="/login" name="login" component={Login} ></Route>
 
-    <Route path="/:username" name="layout" component={Layout} >
+    <Route path="/:username" name="layout" component={Widgets} >
       <Route path="/c" name="create" component={Create} ></Route>
       <Route path="/:id" name="poll" component={Vote} ></Route>
       <Route path="/:id/r" name="results" component={Results} ></Route>
