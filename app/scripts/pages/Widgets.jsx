@@ -281,7 +281,7 @@ var Layout = React.createClass({
               <header className="logo-header" >
                 <Link to={"/"} className="logo" ></Link>
               </header>
-              <div className="content">
+              <div className="widget__content">
                 { this.props.children || waiting }
               </div>
             </Widget>
