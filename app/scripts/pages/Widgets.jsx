@@ -3,9 +3,15 @@ import api from 'utils/WebsocketApi.js';
 import { Link, Navigation } from 'react-router';
 import Loading from 'pages/Loading.jsx';
 import TwitchSDK from 'utils/TwitchSDK.js';
-import Widget from 'components/Widget.jsx';
-import dragula from 'react-dragula';
+// import dragula from 'react-dragula';
 import _ from 'underscore';
+
+// Widgets
+import Widget from 'components/Widget.jsx';
+import WidgetTwitchLive from 'components/WidgetTwitchLive.jsx';
+import WidgetTwitchChat from 'components/WidgetTwitchChat.jsx';
+import WidgetStreampoll from 'components/WidgetStreampoll.jsx';
+import WidgetTwitterFeed from 'components/WidgetTwitterFeed.jsx';
 
 var Layout = React.createClass({
 
@@ -54,7 +60,6 @@ var Layout = React.createClass({
   componentWillMount: function() {
 
     this.dragula = false;
-    this.twitterFeed = false;
 
     console.log( this.props.params.username );
 
@@ -105,24 +110,6 @@ var Layout = React.createClass({
     //   this.dragula = true;
     // }
 
-    if (!this.twitterFeed && this.refs.twitterFeed) {
-      this.twitterFeed = true;
-      this.initTwitterFeed();
-    }
-
-  },
-
-  initTwitterFeed: function() {
-    twttr.ready( (twttr) => {
-      twttr.widgets.createTimeline(
-        "636662179987525632",
-        React.findDOMNode(this.refs.twitterFeed),
-        {
-          width: 2000,
-          screenName: this.props.params.username
-        }
-      );
-    });
   },
 
   initDragula: function() {
@@ -213,16 +200,6 @@ var Layout = React.createClass({
       return <Loading />
     };
 
-    let waiting = (
-      <div className="stream-poll__waiting">
-        <p>No poll created by the streamer yet.</p>
-        <p>Are you the streamer of this live ?</p>
-        <a href="" onClick={this.signin} className="twitch-signin" >
-          <img src='https://camo.githubusercontent.com/e3dadf5d1f371961805e6843fc7d9d611a1d14b5/687474703a2f2f7474762d6170692e73332e616d617a6f6e6177732e636f6d2f6173736574732f636f6e6e6563745f6461726b2e706e67'/>
-        </a>
-      </div>
-    );
-
     let widgetsFunctions = {
       'bigger':this.bigger,
       'smaller':this.smaller,
@@ -241,70 +218,41 @@ var Layout = React.createClass({
         return;
       }
 
+      let widgetComponent;
       switch (widget.name) {
 
         case 'twitch-live':
-          return (
-            <Widget
-              className="widget--twitch-video widget--iframe"
-              key={"widget"+i}
-              i={i}
-              {...widgetsFunctions}
-              {...widget}
-            >
-                <iframe src={"http://www.twitch.tv/" + this.props.params.username + "/embed"} frameBorder="0" scrolling="no" ></iframe>
-            </Widget>
-          );
+          widgetComponent = <WidgetTwitchLive />;
           break;
+
         case 'twitch-chat':
-          return (
-            <Widget
-              className="widget--twitch-chat widget--iframe"
-              key={"widget"+i}
-              i={i}
-              {...widgetsFunctions}
-              {...widget}
-            >
-                <iframe src={"http://www.twitch.tv/" + this.props.params.username + "/chat?popout="} frameBorder="0" scrolling="no" ></iframe>
-            </Widget>
-          );
+          widgetComponent = <WidgetTwitchChat />;
           break;
+
         case 'streampoll':
-          return (
-            <Widget
-              className="stream-poll"
-              key={"widget"+i}
-              i={i}
-              {...widgetsFunctions}
-              {...widget}
-            >
-              <header className="logo-header" >
-                <Link to={"/"} className="logo" ></Link>
-              </header>
-              <div className="widget__content">
-                { this.props.children || waiting }
-              </div>
-            </Widget>
-          );
+          widgetComponent = <WidgetStreampoll />;
           break;
 
         case 'twitter-feed':
-          return (
-            <Widget
-              className="widget--twitter-feed widget--iframe"
-              key={"widget"+i}
-              i={i}
-              username={this.props.username}
-              {...widgetsFunctions}
-              {...widget}
-              ref="twitterWidget"
-            >
-              <div ref="twitterFeed"></div>
-            </Widget>
-          );
+          widgetComponent = <WidgetTwitterFeed />;
           break;
 
       }
+
+      return (
+
+        <Widget
+          className={"widget--"+widget.name+" widget--iframe"}
+          key={"widget"+i}
+          i={i}
+          streamerUsername={this.props.params.username}
+          {...widgetsFunctions}
+          {...widget}
+        >
+          { widgetComponent }
+        </Widget>
+
+      );
 
     });
 
