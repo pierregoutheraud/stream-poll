@@ -61,18 +61,12 @@ var Layout = React.createClass({
 
     this.dragula = false;
 
-    console.log( this.props.params.username );
-
     // Twitch Auth
     TwitchSDK.auth( this.props.params.username ).then((user) => {
-
-      console.log(user);
 
       if (user.authenticated) {
 
         api.newUser( this.props.params.username ).then((user) => {
-
-          console.log('NEW USER :)', user);
 
           this.listenToStreamer(user);
 
@@ -119,17 +113,15 @@ var Layout = React.createClass({
 
   listenToStreamer: function(user) {
 
-    console.log('listenToStreamer', user);
-
     api.listenToStreamer(user, this.props.params.username, (poll) => {
-      console.log('update from streamer ', poll._id);
-      this.transitionTo('/'+this.props.params.username+'/'+poll._id); // redirect to current streamer poll
+      // console.log('update from streamer ', poll._id);
+      // this.transitionTo('/'+this.props.params.username+'/'+poll._id); // redirect to current streamer poll
     });
 
   },
 
   getWidgetByOrder: function(i) {
-    return _.findWhere(this.state.widgets,{order:i});
+    return _.findWhere(this.state.widgets,{order:i, active:true});
   },
   getActives: function() {
     return _.find(this.state.widgets, {active:true});
@@ -148,17 +140,21 @@ var Layout = React.createClass({
   moveRight: function(i) {
     let w1 = this.state.widgets[i],
         w2 = this.getWidgetByOrder(w1.order + 1);
+    console.log(w1.order);
     if (w1.order < this.state.widgets.length) {
       w1.order++; w2.order--;
+      console.log(w1.order);
       this.setState({ widgets: this.state.widgets });
     }
   },
   moveLeft: function(i) {
     let w1 = this.state.widgets[i],
         w0 = this.getWidgetByOrder(w1.order - 1);
-    if (w1.order > 1) {
+    console.log(w1.order);
+    if (w1.order > 1 && w0) {
       w1.order--;
       w0.order++;
+      console.log(w1.order);
       this.setState({ widgets: this.state.widgets });
     }
   },
@@ -208,8 +204,6 @@ var Layout = React.createClass({
       'close':this.close
     };
 
-    console.log('widgetsFunctions', widgetsFunctions);
-
     let inactiveWidgets = [];
     let widgets = this.state.widgets.map((widget,i) => {
 
@@ -222,19 +216,19 @@ var Layout = React.createClass({
       switch (widget.name) {
 
         case 'twitch-live':
-          widgetComponent = <WidgetTwitchLive />;
+          widgetComponent = <WidgetTwitchLive streamerUsername={this.props.params.username} />;
           break;
 
         case 'twitch-chat':
-          widgetComponent = <WidgetTwitchChat />;
+          widgetComponent = <WidgetTwitchChat streamerUsername={this.props.params.username} />;
           break;
 
         case 'streampoll':
-          widgetComponent = <WidgetStreampoll />;
+          widgetComponent = <WidgetStreampoll streamerUsername={this.props.params.username} />;
           break;
 
         case 'twitter-feed':
-          widgetComponent = <WidgetTwitterFeed />;
+          widgetComponent = <WidgetTwitterFeed streamerUsername={this.props.params.username} />;
           break;
 
       }
@@ -245,7 +239,6 @@ var Layout = React.createClass({
           className={"widget--"+widget.name+" widget--iframe"}
           key={"widget"+i}
           i={i}
-          streamerUsername={this.props.params.username}
           {...widgetsFunctions}
           {...widget}
         >

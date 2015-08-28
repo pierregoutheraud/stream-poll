@@ -52,8 +52,6 @@ var Layout = React.createClass({
 
   render: function() {
 
-    console.log(this.props);
-
     let toggleClass = this.state.open ? 'widget--open' : 'widget--closed';
 
     let widgetStyle = {
