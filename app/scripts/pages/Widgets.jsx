@@ -12,6 +12,7 @@ import WidgetTwitchLive from 'components/WidgetTwitchLive.jsx';
 import WidgetTwitchChat from 'components/WidgetTwitchChat.jsx';
 import WidgetStreampoll from 'components/WidgetStreampoll.jsx';
 import WidgetTwitterFeed from 'components/WidgetTwitterFeed.jsx';
+import WidgetGoogle from 'components/WidgetGoogle.jsx';
 
 var Layout = React.createClass({
 
@@ -25,7 +26,7 @@ var Layout = React.createClass({
         title: 'twitch live',
         flex: 2,
         order: 1,
-        active: false
+        active: true
       },
       {
         name: 'twitch-chat',
@@ -46,6 +47,13 @@ var Layout = React.createClass({
         title: 'twitter feed',
         flex: 1,
         order: 4,
+        active: false
+      },
+      {
+        name: 'google',
+        title: 'google',
+        flex: 1,
+        order: 5,
         active: false
       }
     ];
@@ -68,11 +76,10 @@ var Layout = React.createClass({
 
         api.newUser( this.props.params.username ).then((user) => {
 
-          this.listenToStreamer(user);
-
-          if (typeof this.props.children === 'undefined' && user.streamer) {
-            this.replaceWith('/'+this.props.params.username+'/c');
-          }
+          // this.listenToStreamer(user);
+          // if (typeof this.props.children === 'undefined' && user.streamer) {
+          //   this.replaceWith('/'+this.props.params.username+'/c');
+          // }
 
           this.setState({ loading: false });
 
@@ -113,10 +120,10 @@ var Layout = React.createClass({
 
   listenToStreamer: function(user) {
 
-    api.listenToStreamer(user, this.props.params.username, (poll) => {
+    // api.listenToStreamer(user, this.props.params.username, (poll) => {
       // console.log('update from streamer ', poll._id);
       // this.transitionTo('/'+this.props.params.username+'/'+poll._id); // redirect to current streamer poll
-    });
+    // });
 
   },
 
@@ -231,7 +238,13 @@ var Layout = React.createClass({
           widgetComponent = <WidgetTwitterFeed streamerUsername={this.props.params.username} />;
           break;
 
+        case 'google':
+          widgetComponent = <WidgetGoogle />;
+          break;
+
       }
+
+      console.log(this.props.params);
 
       return (
 
@@ -241,6 +254,7 @@ var Layout = React.createClass({
           i={i}
           {...widgetsFunctions}
           {...widget}
+          params={this.props.params}
         >
           { widgetComponent }
         </Widget>
@@ -249,9 +263,21 @@ var Layout = React.createClass({
 
     });
 
+    // console.log(widgets);
+    // if (!widgets.length) {
+    //   widgets = (
+    //     <p>Nope!</p>
+    //   );
+    // }
+
     inactiveWidgets = inactiveWidgets.map((widget,i) => {
       return (
-        <a href="" className="inactive-widgets__widget" onClick={this.activateWidget.bind(this, widget)}>+ {widget.title}</a>
+        <a
+          href=""
+          key={"inactive-widget"+i}
+          className={"inactive-widgets__widget inactive-widgets__widget--" + widget.name + " bgi bgi--" + widget.name}
+          onClick={this.activateWidget.bind(this, widget)}
+        ></a>
       );
     });
 
@@ -259,8 +285,10 @@ var Layout = React.createClass({
     let leftBar = null;
     if (inactiveWidgets.length) {
       leftBar = (
-        <div className="inactive-widgets" >
-          { inactiveWidgets }
+        <div className="app__leftBar">
+          <div className="inactive-widgets" >
+            { inactiveWidgets }
+          </div>
         </div>
       );
     }
@@ -297,9 +325,9 @@ var Layout = React.createClass({
 
         <div className="app__content">
 
-          {leftBar}
+          { leftBar }
 
-          <div className="widgets" ref="widgets">
+          <div className="app__widgets" ref="widgets">
             { widgets }
           </div>
 

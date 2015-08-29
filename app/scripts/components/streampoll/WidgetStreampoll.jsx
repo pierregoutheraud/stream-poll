@@ -1,10 +1,6 @@
 import React from 'react/addons';
 import { Link } from 'react-router';
 
-import StreampollCreate from 'components/streampoll/StreampollCreate.jsx';
-import StreampollVote from 'components/streampoll/StreampollVote.jsx';
-import StreampollResults from 'components/streampoll/StreampollResults.jsx';
-
 var WidgetTwitchLive = React.createClass({
 
   render: function() {
@@ -19,8 +15,6 @@ var WidgetTwitchLive = React.createClass({
       </div>
     );
 
-    console.log(this.props);
-
     return (
       <div>
         <header className="logo-header" >
@@ -28,14 +22,7 @@ var WidgetTwitchLive = React.createClass({
         </header>
         <div className="content">
 
-          <StreampollCreate
-            params={this.props.params}
-          />
-
-          {
-            // <StreamPollVote />
-            // <StreamPollResults />
-          }
+          <StreamPollCreate />
 
         </div>
       </div>
