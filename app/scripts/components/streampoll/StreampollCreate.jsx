@@ -63,7 +63,8 @@ var Home = React.createClass({
       this.setState({ creating: true });
 
       api.postPoll(data).then((poll) => {
-        this.transitionTo('/' + this.props.params.username + '/' + poll._id);
+        // this.transitionTo('/' + this.props.params.username + '/' + poll._id);
+        this.props.gotoVote( poll );
       });
 
     } else {
@@ -98,7 +99,7 @@ var Home = React.createClass({
 
         <p className="advice" >
           Share this url with your viewers: <a href={currentURL} className="link" >{currentURL}</a><br/><br/>
-          Ask a question to your viewers<br/>
+        Ask a question to your viewers<br/>
           and find out what they think.
         </p>
 

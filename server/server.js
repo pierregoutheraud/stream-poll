@@ -203,7 +203,7 @@ class Api {
     subscribers.forEach((subscriber, i) => {
       console.log('subscriber ' + subscriber.socket.id + ' has been notified about new poll ' + poll._id);
       subscriber.socket.emit('streamer:newPoll', {
-        _id: poll._id
+        poll: poll
       });
     });
 

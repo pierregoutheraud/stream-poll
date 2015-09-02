@@ -1,0 +1,193 @@
+.widget--streampoll {
+
+  &__main {
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    padding-bottom: 80px;
+  }
+
+  .question {
+    font-size: 17px;
+    font-weight: 400;
+    margin-top: 10px;
+    display: inline-block;
+
+    &:before {
+      content: '';
+      width: 20px;
+      height: 20px;
+      background-image: url("../images/icon-question.svg");
+      display: inline-block;
+      background-position: center;
+      background-size: contain;
+      position: relative;
+      top: 5px;
+      margin-right: 5px;
+    }
+  }
+
+  .options {
+
+    margin: 40px 0;
+
+    &__add {
+      a {
+        display: block;
+        border: 1px solid rgba(0,0,0,.1);
+        padding: 0 10px;
+        // width: 36px;
+        height: 40px;
+        line-height: 39px;
+        color: $black;
+        text-decoration: none;
+        transition: 300ms ease border-color;
+        &:hover {
+          border-color: rgba(0,0,0,.3);
+        }
+      }
+    }
+
+  }
+
+  .option {
+
+    margin: 0 0 10px 0;
+    width: 100%;
+
+    @extend .clearfix;
+
+    &__case {
+      float: left;
+      font-size: 15px;
+      color: $black;
+      border: 1px solid rgba(0,0,0,.1);
+      border-right: none;
+      height: 45px;
+      width: 36px;
+      line-height: 45px;
+      font-weight: 700;
+
+      // background-color: $black;
+      // color: white;
+      // border: none;
+
+      text-align: center;
+
+      input {
+        display: inline-block;
+        position: relative;
+        top: -2px;
+      }
+    }
+
+    &__input.input, &__value {
+      float: left;
+      border: 1px solid rgba(0,0,0,.1);
+      padding: 0 15px;
+      font-size: 15px;
+      height: 45px;
+      display: block;
+      width: calc(100% - 36px);
+    }
+
+    &__value {
+      text-align: left;
+      padding: 12px 15px 12px 15px;
+      height: auto;
+    }
+
+    &__remove {
+      float: left;
+      display: none;
+    }
+
+    $resultsHeight: 28px;
+
+    &__results {
+
+    // @extend .clearfix;
+    height: $resultsHeight;
+    width: 100%;
+    z-index: 2;
+
+    // position: relative;
+    // top: -1px;
+
+    border: 1px solid percent-color(90);
+
+      &__bar {
+        float: left;
+        width: 50%;
+        height: $resultsHeight;
+        background-color: percent-color(90);
+        position: relative;
+        &__progress {
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          height: 100%;
+          background-color: $green;
+          width: 0%;
+          transition: 300ms all ease;
+        }
+      }
+
+      &__votes {
+        float: right;
+        font-size: 14px;
+        height: $resultsHeight;
+        line-height: $resultsHeight;
+        width: 50%;
+
+        strong {
+          font-weight: 700;
+        }
+      }
+
+    }
+
+
+    &--result {
+
+      table {
+        table-layout:fixed;
+        border-collapse: collapse;
+        width: 100%;
+
+        td {
+          overflow: hidden;
+        }
+
+        .option__case {
+          height: auto;
+          line-height: normal;
+          float: none;
+          display: table-cell;
+          // padding: 0 13px;
+          max-width: 10px;
+          border: 1px solid percent-color(90);
+        }
+        .option__value {
+          float: none;
+          height: auto;
+          line-height: normal;
+          display: table-cell;
+          border: 1px solid percent-color(90);
+        }
+      }
+
+    }
+
+  }
+
+
+}
+
+footer {
+  // position: absolute;
+  // z-index: 3;
+  // bottom: 0;
+  // left: 0;
+  // right: 0;
+}

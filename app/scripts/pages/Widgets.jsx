@@ -10,7 +10,7 @@ import _ from 'underscore';
 import Widget from 'components/Widget.jsx';
 import WidgetTwitchLive from 'components/WidgetTwitchLive.jsx';
 import WidgetTwitchChat from 'components/WidgetTwitchChat.jsx';
-import WidgetStreampoll from 'components/WidgetStreampoll.jsx';
+import WidgetStreampoll from 'components/streampoll/WidgetStreampoll.jsx';
 import WidgetTwitterFeed from 'components/WidgetTwitterFeed.jsx';
 import WidgetGoogle from 'components/WidgetGoogle.jsx';
 
@@ -26,14 +26,14 @@ var Layout = React.createClass({
         title: 'twitch live',
         flex: 2,
         order: 1,
-        active: true
+        active: false
       },
       {
         name: 'twitch-chat',
         title: 'twitch chat',
         flex: 1,
         order: 2,
-        active: true
+        active: false
       },
       {
         name: 'streampoll',
@@ -49,13 +49,13 @@ var Layout = React.createClass({
         order: 4,
         active: false
       },
-      {
-        name: 'google',
-        title: 'google',
-        flex: 1,
-        order: 5,
-        active: false
-      }
+      // {
+      //   name: 'google',
+      //   title: 'google',
+      //   flex: 1,
+      //   order: 5,
+      //   active: false
+      // }
     ];
 
     return {
@@ -76,7 +76,8 @@ var Layout = React.createClass({
 
         api.newUser( this.props.params.username ).then((user) => {
 
-          // this.listenToStreamer(user);
+          console.log('New user', user);
+
           // if (typeof this.props.children === 'undefined' && user.streamer) {
           //   this.replaceWith('/'+this.props.params.username+'/c');
           // }
@@ -87,14 +88,13 @@ var Layout = React.createClass({
 
       } else {
 
-        this.setState({
-          loginPopover: true,
-          loading: false
-        });
-
         // Create temporary user
         api.newUser( this.props.params.username ).then((user) => {
-          this.listenToStreamer(user);
+          console.log('New user', user);
+          this.setState({
+            loginPopover: true,
+            loading: false
+          });
         });
 
       }
@@ -118,15 +118,6 @@ var Layout = React.createClass({
     dragula([widgets]);
   },
 
-  listenToStreamer: function(user) {
-
-    // api.listenToStreamer(user, this.props.params.username, (poll) => {
-      // console.log('update from streamer ', poll._id);
-      // this.transitionTo('/'+this.props.params.username+'/'+poll._id); // redirect to current streamer poll
-    // });
-
-  },
-
   getWidgetByOrder: function(i) {
     return _.findWhere(this.state.widgets,{order:i, active:true});
   },
@@ -147,21 +138,17 @@ var Layout = React.createClass({
   moveRight: function(i) {
     let w1 = this.state.widgets[i],
         w2 = this.getWidgetByOrder(w1.order + 1);
-    console.log(w1.order);
     if (w1.order < this.state.widgets.length) {
       w1.order++; w2.order--;
-      console.log(w1.order);
       this.setState({ widgets: this.state.widgets });
     }
   },
   moveLeft: function(i) {
     let w1 = this.state.widgets[i],
         w0 = this.getWidgetByOrder(w1.order - 1);
-    console.log(w1.order);
     if (w1.order > 1 && w0) {
       w1.order--;
       w0.order++;
-      console.log(w1.order);
       this.setState({ widgets: this.state.widgets });
     }
   },
@@ -243,8 +230,6 @@ var Layout = React.createClass({
           break;
 
       }
-
-      console.log(this.props.params);
 
       return (
 

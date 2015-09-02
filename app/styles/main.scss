@@ -11,9 +11,13 @@
 @import "partials/header";
 @import "partials/popover";
 @import "partials/widgets";
+@import "partials/loading";
+
+// Streampoll Widget
+@import "partials/streampoll/streampoll";
+@import "partials/streampoll/create";
+@import "partials/streampoll/vote";
+@import "partials/streampoll/results";
 
 // import pages
 @import "partials/home";
-@import "partials/create";
-@import "partials/poll";
-@import "partials/poll-results";

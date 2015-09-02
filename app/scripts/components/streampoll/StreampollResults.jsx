@@ -2,11 +2,10 @@ import React from 'react/addons';
 import api from 'utils/WebsocketApi.js';
 import CONFIG from 'config/config.js';
 import _ from 'underscore';
-import { Link } from 'react-router';
 import Loading from 'pages/Loading.jsx';
 import user from 'Models/User.js';
 
-var PollResults = React.createClass({
+var StreampollResults = React.createClass({
 
   getInitialState: function() {
     return {
@@ -18,11 +17,7 @@ var PollResults = React.createClass({
 
   componentWillMount: function() {
 
-    console.log('poll results componentWillMount');
-
-    api.getPoll( this.props.params.id ).then((poll) => {
-
-      console.log(poll);
+    api.getPoll( this.props.poll._id ).then((poll) => {
 
       this.connectSocket();
       this.setState({
@@ -30,6 +25,7 @@ var PollResults = React.createClass({
         question: poll.question,
         options: poll.options
       });
+
     });
 
   },
@@ -54,6 +50,11 @@ var PollResults = React.createClass({
       });
 
     })
+  },
+
+  gotoCreate: function(e) {
+    e.preventDefault();
+    this.props.gotoCreate();
   },
 
   render: function() {
@@ -112,17 +113,14 @@ var PollResults = React.createClass({
     if (user.streamer) {
       footer = (
         <footer>
-          {
-            // <Link className="btn btn--black" to={"/"+this.props.params.username+"/"+this.state.id} >back to vote</Link>
-          }
-          <Link className="btn btn--black" to={"/"+this.props.params.username+"/c"} >create new poll</Link>
+          <a href="" className="btn btn--black" onClick={this.gotoCreate} >create new poll</a>
         </footer>
       );
     }
 
 
     return (
-      <div className="poll-results">
+      <div className="results">
 
         <h1 className="question" >{ this.state.question }</h1>
 
@@ -140,4 +138,4 @@ var PollResults = React.createClass({
 
 });
 
-export default PollResults;
+export default StreampollResults;
