@@ -12,11 +12,11 @@ class Api {
     });
   }
 
-  subscribeToPoll(id, callback) {
-    this.socket.emit('subscribeTo:poll', {id});
+  listenToPoll(id, callback) {
     this.socket.on('poll:update', (data) => {
       callback(data);
     });
+    this.socket.emit('subscribeTo:poll', {id});
   }
 
   listenToStreampoll( user, streamerUsername, callback ) {

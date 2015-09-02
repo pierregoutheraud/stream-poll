@@ -81,8 +81,6 @@ class Api {
 
         let { question, options } = data;
 
-        console.log( question, options );
-
         let poll = new PollModel({
           question: question
         });
@@ -180,7 +178,7 @@ class Api {
   }
 
   notifySubscriber (user) {
-    console.log(this.users);
+    // console.log(this.users);
     let streamer = _.findWhere(this.users, {username: user.subscribeToStreamer});
 
     // If streamer is connected
@@ -191,7 +189,7 @@ class Api {
       // If at least one poll created
       if (lastPoll) {
         user.socket.emit('streamer:newPoll', {
-          _id: lastPoll._id
+          poll: lastPoll
         });
       }
     }
@@ -209,11 +207,12 @@ class Api {
 
   }
 
-  newVote(poll_id, option) {
+  newVote (poll_id, option) {
     console.log('new vote !');
     for (let i=0,l=this.users.length;i<l;i++) {
       let user = this.users[i];
       if (user.poll_id == poll_id) {
+        console.log('poll:update to ', user.id);
         user.socket.emit('poll:update', option);
       }
     }

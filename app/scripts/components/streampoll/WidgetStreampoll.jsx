@@ -22,7 +22,7 @@ var WidgetTwitchLive = React.createClass({
 
     if (!user.streamer) {
       api.listenToStreampoll(user, this.props.params.username, (poll) => {
-        console.log('update from streamer ', poll._id);
+        console.log('update from streamer ', poll);
         this.gotoVote(poll);
       });
     }

@@ -9,30 +9,27 @@ var StreampollResults = React.createClass({
 
   getInitialState: function() {
     return {
-      id: null,
-      question: null,
       options: null
     };
   },
 
   componentWillMount: function() {
 
-    api.getPoll( this.props.poll._id ).then((poll) => {
+    // api.getPoll( this.props.poll._id ).then((poll) => {
 
       this.connectSocket();
+
       this.setState({
-        id: poll._id,
-        question: poll.question,
-        options: poll.options
+        options: this.props.poll.options
       });
 
-    });
+    // });
 
   },
 
   connectSocket: function() {
 
-    api.subscribeToPoll(this.props.params.id, (dataOption) => {
+    api.listenToPoll(this.props.params.id, (dataOption) => {
 
       console.log( dataOption );
 
@@ -58,10 +55,6 @@ var StreampollResults = React.createClass({
   },
 
   render: function() {
-
-    if (this.state.id === null) {
-      return <Loading />;
-    }
 
     let totalVotes = 0;
     this.state.options.forEach((option) => { totalVotes += option.votes; });
@@ -122,7 +115,7 @@ var StreampollResults = React.createClass({
     return (
       <div className="results">
 
-        <h1 className="question" >{ this.state.question }</h1>
+        <h1 className="question" >{ this.props.poll.question }</h1>
 
         <ul className="options">
           {options}
