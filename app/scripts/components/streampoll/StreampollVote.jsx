@@ -3,6 +3,7 @@ import { Link, Router, Navigation } from 'react-router';
 import api from 'utils/WebsocketApi.js';
 import Loading from 'pages/Loading.jsx';
 import user from 'Models/User.js';
+import _ from 'underscore';
 
 let StreampollVote = React.createClass({
 
@@ -68,10 +69,11 @@ let StreampollVote = React.createClass({
         option_id = selectedOption._id,
         value = selectedOption.value;
 
-    this.setState({ voting: true });
     api.vote(this.props.poll._id, option_id, value).then((option) => {
-      // this.replaceWith('/' + this.props.params.username + '/' + poll_id + '/r');
-      this.props.gotoResults(this.props.poll);
+      let poll = this.props.poll;
+      let o = _.findWhere(poll.options, {_id:option._id});
+      o.votes = option.votes;
+      this.props.gotoResults(poll);
     });
   },
 
@@ -85,6 +87,11 @@ let StreampollVote = React.createClass({
     this.setState({
       indexOptionChecked: index
     });
+  },
+
+  gotoResults: function(e) {
+    e.preventDefault();
+    this.props.gotoResults(this.props.poll);
   },
 
   render: function() {
@@ -137,7 +144,7 @@ let StreampollVote = React.createClass({
 
         <footer>
           <button type="submit" className="btn btn--green" onClick={onClickVote} >{voteText}</button>
-          <Link className="btn btn--black" to={"/"+this.props.params.username+"/"+this.props.poll.id+"/r"} >results</Link>
+          <a href="" className="btn btn--black" onClick={this.gotoResults} >results</a>
         </footer>
 
       </div>

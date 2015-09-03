@@ -17,7 +17,7 @@ var StreampollResults = React.createClass({
 
     // api.getPoll( this.props.poll._id ).then((poll) => {
 
-      this.connectSocket();
+      this.listenToPoll();
 
       this.setState({
         options: this.props.poll.options
@@ -27,11 +27,11 @@ var StreampollResults = React.createClass({
 
   },
 
-  connectSocket: function() {
+  listenToPoll: function() {
 
-    api.listenToPoll(this.props.params.id, (dataOption) => {
+    api.listenToPoll(this.props.poll._id, (dataOption) => {
 
-      console.log( dataOption );
+      console.log( 'listenToPoll', dataOption );
 
       let option = _.findWhere(this.state.options, {_id:dataOption._id});
 

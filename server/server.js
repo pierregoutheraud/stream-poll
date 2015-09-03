@@ -159,7 +159,7 @@ class Api {
 
       socket.on('subscribeTo:poll', (data) => {
         user.poll_id = data.id;
-        console.log('user subscribed to poll', user.socket.id);
+        console.log('user subscribed to poll', data);
       });
 
       socket.on('subscribeTo:streamer', (streamer) => {
@@ -211,6 +211,8 @@ class Api {
     console.log('new vote !');
     for (let i=0,l=this.users.length;i<l;i++) {
       let user = this.users[i];
+      // console.log(user, this.users);
+      console.log(user.id);
       if (user.poll_id == poll_id) {
         console.log('poll:update to ', user.id);
         user.socket.emit('poll:update', option);
