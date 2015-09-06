@@ -32,7 +32,9 @@ var Home = React.createClass({
       <div className="app home">
 
         <header className="home__header">
-          <Link to={"/"} className="logo" ></Link>
+          {
+            //<Link to={"/"} className="logo" ></Link>
+          }
           <div className="home__header__screen"></div>
         </header>
 
