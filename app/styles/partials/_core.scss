@@ -37,6 +37,9 @@ ul, li {
   &:hover {
     text-decoration: none;
   }
+  &--green {
+    color: $green;
+  }
 }
 
 /* ---------------- */

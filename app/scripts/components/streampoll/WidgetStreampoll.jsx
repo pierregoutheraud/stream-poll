@@ -129,9 +129,11 @@ var WidgetTwitchLive = React.createClass({
 
     return (
       <div className="widget__content">
-        <header className="logo-header" >
-          <Link to={"/"} className="logo" ></Link>
-        </header>
+        {
+          //<header className="logo-header" >
+          //  <Link to={"/"} className="logo" ></Link>
+          //</header>
+        }
         <div className="widget--streampoll__main">
           { content }
         </div>

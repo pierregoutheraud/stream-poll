@@ -28,14 +28,14 @@ var Layout = React.createClass({
         title: 'twitch live',
         flex: 2,
         order: 1,
-        active: true
+        active: false
       },
       {
         name: 'twitch-chat',
         title: 'twitch chat',
         flex: 1,
         order: 2,
-        active: true
+        active: false
       },
       {
         name: 'streampoll',
@@ -44,13 +44,13 @@ var Layout = React.createClass({
         order: 3,
         active: true
       },
-      {
-        name: 'twitter-feed',
-        title: 'twitter feed',
-        flex: 1,
-        order: 4,
-        active: false
-      },
+      // {
+      //   name: 'twitter-feed',
+      //   title: 'twitter feed',
+      //   flex: 1,
+      //   order: 4,
+      //   active: false
+      // },
       // {
       //   name: 'google',
       //   title: 'google',

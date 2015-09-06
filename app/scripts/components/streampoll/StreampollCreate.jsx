@@ -9,9 +9,16 @@ var Home = React.createClass({
   mixins: [ Navigation ],
 
   getInitialState: function() {
+
+    let defaultOptionsNumber = 4;
+    let options = [];
+    for(let i=0;i<defaultOptionsNumber;i++) {
+      options.push('');
+    }
+
     return {
       question: '',
-      options: ['', '', '', ''],
+      options: options,
       creating: false
     };
   },
@@ -97,14 +104,13 @@ var Home = React.createClass({
 
       <div className="create">
 
+        <h1>Ask a question to your viewers and find out what they think.</h1>
         <p className="advice" >
-          Share this url with your viewers: <a href={currentURL} className="link" >{currentURL}</a><br/><br/>
-        Ask a question to your viewers<br/>
-          and find out what they think.
+          Share this url with your viewers: <a href={currentURL} className="link link--green" >{currentURL}</a>
         </p>
 
           <textarea
-            placeholder="Type a question for your viewers"
+            placeholder="Type your question here"
             type="text"
             ref="question"
             onChange={this.onChangeQuestion}

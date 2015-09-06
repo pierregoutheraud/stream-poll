@@ -3,10 +3,16 @@
   text-align: center;
 
   .advice {
-    font-size: 16px;
+    font-size: 18px;
+    font-style: italic;
+    color: percent-color(20);
+    margin-bottom: 30px;
+  }
+
+  h1 {
+    font-size: 30px;
     margin-bottom: 20px;
-    // font-style: italic;
-    color: percent-color(20)
+    padding: 0 30px;
   }
 
   textarea.home__question {
