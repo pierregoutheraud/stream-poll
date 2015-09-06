@@ -28,14 +28,14 @@ var Layout = React.createClass({
         title: 'twitch live',
         flex: 2,
         order: 1,
-        active: false
+        active: true
       },
       {
         name: 'twitch-chat',
         title: 'twitch chat',
         flex: 1,
         order: 2,
-        active: false
+        active: true
       },
       {
         name: 'streampoll',
