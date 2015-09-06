@@ -4,6 +4,7 @@ import api from 'utils/WebsocketApi.js';
 import Loading from 'pages/Loading.jsx';
 import user from 'Models/User.js';
 import _ from 'underscore';
+import store from 'store';
 
 let StreampollVote = React.createClass({
 
@@ -21,14 +22,14 @@ let StreampollVote = React.createClass({
   },
 
   componentWillMount: function() {
-    console.log(this.props.poll);
-    // api.getPoll( this.props.params.id ).then((poll) => {
-    // this.setState({
-    //   id: poll._id,
-    //   question: poll.question,
-    //   options: poll.options
-    // });
-    // });
+    this.checkIfAlreadyVoted();
+  },
+
+  checkIfAlreadyVoted: function() {
+    let ids = store.get('streampoll_votes') || null;
+    if (ids && ids.indexOf(this.props.poll._id) !== -1) {
+      this.gotoResults();
+    }
   },
 
   onAddOption: function(e) {
@@ -64,17 +65,26 @@ let StreampollVote = React.createClass({
       return;
     }
 
+    this.setState({ voting: true }); // voting...
+
     let options = this.props.poll.options.concat( this.state.newOptions ),
         selectedOption = options[this.state.indexOptionChecked],
         option_id = selectedOption._id,
         value = selectedOption.value;
 
-    api.vote(this.props.poll._id, option_id, value).then((option) => {
-      let poll = this.props.poll;
-      let o = _.findWhere(poll.options, {_id:option._id});
-      o.votes = option.votes;
-      this.props.gotoResults(poll);
+    api.vote(this.props.poll._id, option_id, value).then((poll) => {
+      // let poll = this.props.poll;
+      // let o = _.findWhere(poll.options, {_id:option._id});
+      // o.votes = option.votes;
+      this.savePollId();
+      this.props.gotoResults();
     });
+  },
+
+  savePollId: function() {
+    let ids = store.get('streampoll_votes') || [];
+    ids.push( this.props.poll._id )
+    store.set('streampoll_votes', ids);
   },
 
   onCheckOption: function(i) {
@@ -90,8 +100,8 @@ let StreampollVote = React.createClass({
   },
 
   gotoResults: function(e) {
-    e.preventDefault();
-    this.props.gotoResults(this.props.poll);
+    if (e) e.preventDefault();
+    this.props.gotoResults();
   },
 
   render: function() {

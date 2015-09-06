@@ -19,11 +19,11 @@ class Api {
     this.socket.emit('subscribeTo:poll', {id});
   }
 
-  listenToStreampoll( user, streamerUsername, callback ) {
+  listenToStreamer( user, streamerUsername, callback ) {
     // return new Promise((resolve, reject) => {
       if (!user.streamer) {
-        this.socket.on('streamer:newPoll', (data) => {
-          callback(data.poll);
+        this.socket.on('streamer:update', (data) => {
+          callback(data);
         });
         this.socket.emit('subscribeTo:streamer', {username:streamerUsername});
       }

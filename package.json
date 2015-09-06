@@ -64,7 +64,7 @@
     "redux": "^0.12.0",
     "shortid": "^2.2.2",
     "socket.io": "^1.3.6",
-    "store": "git://github.com/marcuswestin/store.js",
+    "store": "^1.3.17",
     "superagent": "^1.2.0",
     "twitch-sdk": "git://github.com/justintv/twitch-js-sdk",
     "underscore": "^1.8.3",

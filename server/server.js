@@ -47,7 +47,8 @@ class User {
   }
 
   subscribeToStreamer (streamerUsername) {
-    this.subscribeToStreamer = streamerUsername;
+    // Subscribe to streamer
+    this.subscribedToStreamer = streamerUsername;
   }
 
 }
@@ -74,6 +75,7 @@ class Api {
         user = new User(data, socket);
         this.users.push(user);
         socket.emit('user:new', data);
+        this.notifySubscribersOf(user, {connected: true});
       });
 
       /* New POLL */
@@ -90,7 +92,7 @@ class Api {
 
             user.polls.push(poll); // Save poll of streamer
             socket.emit('poll:new', poll);
-            this.notifySubscribers(user, poll);
+            this.notifySubscribersOf(user, {poll});
 
           });
         });
@@ -163,9 +165,20 @@ class Api {
       });
 
       socket.on('subscribeTo:streamer', (streamer) => {
+
+        /*
+        // Check if streamer is connected
+        if (this.getUserByUsername(streamer.username)) {
+          user.socket.emit('streamer:connected', true);
+        } else {
+          user.socket.emit('streamer:connected', false);
+        }
+        */
+
         user.subscribeToStreamer(streamer.username);
         this.notifySubscriber(user);
         console.log('user subscribed to streamer', streamer.username);
+
       });
 
       socket.on('disconnect', () => {
@@ -177,32 +190,39 @@ class Api {
 
   }
 
+  getUserByUsername (username) {
+    return _.findWhere(this.users, {username: username});
+  }
+
   notifySubscriber (user) {
     // console.log(this.users);
-    let streamer = _.findWhere(this.users, {username: user.subscribeToStreamer});
+    let streamer = this.getUserByUsername(user.subscribedToStreamer);
 
     // If streamer is connected
     if (streamer) {
-
       let lastPoll = streamer.polls[ streamer.polls.length - 1 ]; // get current poll (last one)
-
       // If at least one poll created
       if (lastPoll) {
-        user.socket.emit('streamer:newPoll', {
+        user.socket.emit('streamer:update', {
           poll: lastPoll
         });
+      } else {
+        user.socket.emit('streamer:update', {
+          connected: true
+        });
       }
+    } else {
+      user.socket.emit('streamer:update', {
+        connected: false
+      });
     }
   }
 
-  notifySubscribers (streamer, poll) {
-
-    let subscribers = _.where(this.users, {subscribeToStreamer: streamer.username});
+  notifySubscribersOf (streamer, data) {
+    let subscribers = _.where(this.users, {subscribedToStreamer: streamer.username});
     subscribers.forEach((subscriber, i) => {
-      console.log('subscriber ' + subscriber.socket.id + ' has been notified about new poll ' + poll._id);
-      subscriber.socket.emit('streamer:newPoll', {
-        poll: poll
-      });
+      console.log('subscriber ' + subscriber.socket.id + ' has been notified about', data);
+      subscriber.socket.emit('streamer:update', data);
     });
 
   }
@@ -222,6 +242,7 @@ class Api {
 
   removeUser (user) {
     if (typeof user === 'undefined') return false;
+    this.notifySubscribersOf(user, {connected:false});
     for (let i=0,l=this.users.length;i<l;i++) {
       if (user.socket.id == this.users[i].socket.id) {
         console.log('remove poll !', i);

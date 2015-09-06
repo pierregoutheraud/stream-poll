@@ -13,19 +13,37 @@ var WidgetTwitchLive = React.createClass({
 
     return {
       current: 'create',
-      poll: null
+      poll: null,
+      streamerConnected: false
     };
 
   },
 
   componentWillMount: function() {
 
-    if (!user.streamer) {
-      api.listenToStreampoll(user, this.props.params.username, (poll) => {
-        console.log('update from streamer ', poll);
-        this.gotoVote(poll);
+    if (!user.isCurrentStreamer(this.props.streamerUsername)) {
+
+      console.log('listenToStreamer update');
+
+      api.listenToStreamer(user, this.props.params.username, (data) => {
+
+        if (typeof data.poll !== 'undefined') { // update about poll
+          console.log('update from streamer ', data.poll);
+          this.gotoVote(data.poll);
+        } else if (typeof data.connected !== 'undefined') { // update about connected
+          this.setState({
+            streamerConnected: data.connected
+          });
+        }
+
       });
-    }
+
+    } /*else {
+      // if this is current streamer, it means streamer is connected
+      this.setState({
+        streamerConnected: true
+      });
+    }*/
 
   },
 
@@ -39,30 +57,21 @@ var WidgetTwitchLive = React.createClass({
   gotoVote: function(poll) {
     this.setState({
       current: 'vote',
-      poll: poll
+      poll: poll,
+      streamerConnected: true
     });
   },
 
-  gotoResults: function(poll) {
+  gotoResults: function() {
     this.setState({
-      current: 'results',
-      poll: poll
+      current: 'results'
     });
   },
 
   render: function() {
 
-    let waiting = (
-      <div className="stream-poll__waiting">
-        <p>No poll created by the streamer yet.</p>
-        <p>Are you the streamer of this live ?</p>
-        <a href="" onClick={this.signin} className="twitch-signin" >
-          <img src='https://camo.githubusercontent.com/e3dadf5d1f371961805e6843fc7d9d611a1d14b5/687474703a2f2f7474762d6170692e73332e616d617a6f6e6177732e636f6d2f6173736574732f636f6e6e6563745f6461726b2e706e67'/>
-        </a>
-      </div>
-    );
-
     let content;
+
     switch (this.state.current) {
       case 'create':
         content = (
@@ -92,6 +101,30 @@ var WidgetTwitchLive = React.createClass({
           />
         );
         break;
+    }
+
+    // If not current streamer
+    if (!user.isCurrentStreamer(this.props.streamerUsername)) {
+
+      if (!this.state.streamerConnected) {
+
+        content = (
+          <div className="stream-poll__waiting">
+            <p>The streamer is not connected, are you {this.props.streamerUsername} ?</p>
+            <a href="" onClick={this.props.signin} className="twitch-signin" >
+              <img src='https://camo.githubusercontent.com/e3dadf5d1f371961805e6843fc7d9d611a1d14b5/687474703a2f2f7474762d6170692e73332e616d617a6f6e6177732e636f6d2f6173736574732f636f6e6e6563745f6461726b2e706e67'/>
+            </a>
+          </div>
+        );
+
+      } else if (this.state.poll === null) {
+        content = (
+          <div className="stream-poll__waiting">
+            <p>The streamer is connected, but did not create any poll yet.<br/>Let's wait for him!</p>
+          </div>
+        );
+      }
+
     }
 
     return (

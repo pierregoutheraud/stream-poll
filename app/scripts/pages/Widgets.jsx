@@ -14,6 +14,8 @@ import WidgetStreampoll from 'components/streampoll/WidgetStreampoll.jsx';
 import WidgetTwitterFeed from 'components/WidgetTwitterFeed.jsx';
 import WidgetGoogle from 'components/WidgetGoogle.jsx';
 
+// https://tmi.twitch.tv/group/user/USERNAMEHERE/chatters
+
 var Layout = React.createClass({
 
     mixins: [ Navigation ],
@@ -92,7 +94,7 @@ var Layout = React.createClass({
         api.newUser( this.props.params.username ).then((user) => {
           console.log('New user', user);
           this.setState({
-            loginPopover: true,
+            loginPopover: false,
             loading: false
           });
         });
@@ -126,7 +128,7 @@ var Layout = React.createClass({
   },
 
   signin: function(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     TwitchSDK.signin();
   },
 
@@ -218,7 +220,7 @@ var Layout = React.createClass({
           break;
 
         case 'streampoll':
-          widgetComponent = <WidgetStreampoll streamerUsername={this.props.params.username} />;
+          widgetComponent = <WidgetStreampoll signin={this.signin} streamerUsername={this.props.params.username} />;
           break;
 
         case 'twitter-feed':

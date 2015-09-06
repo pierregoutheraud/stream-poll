@@ -9,41 +9,37 @@ var StreampollResults = React.createClass({
 
   getInitialState: function() {
     return {
-      options: null
+      poll: null
     };
   },
 
   componentWillMount: function() {
 
-    // api.getPoll( this.props.poll._id ).then((poll) => {
-
-      this.listenToPoll();
-
-      this.setState({
-        options: this.props.poll.options
-      });
-
-    // });
+    // Mise a jour du poll, props --> state
+    api.getPoll( this.props.poll._id ).then((poll) => {
+      this.listenToPoll(poll);
+      this.setState({ poll: poll });
+    });
 
   },
 
-  listenToPoll: function() {
+  listenToPoll: function(poll) {
 
-    api.listenToPoll(this.props.poll._id, (dataOption) => {
+    api.listenToPoll(poll._id, (dataOption) => {
 
       console.log( 'listenToPoll', dataOption );
 
-      let option = _.findWhere(this.state.options, {_id:dataOption._id});
+      let option = _.findWhere(this.state.poll.options, {_id:dataOption._id});
 
       // New option
       if (typeof option === 'undefined') {
-        this.state.options.push(dataOption);
+        this.state.poll.options.push(dataOption);
       } else {
         option.votes = dataOption.votes;
       }
 
       this.setState({
-        options: this.state.options
+        poll: this.state.poll
       });
 
     })
@@ -56,11 +52,15 @@ var StreampollResults = React.createClass({
 
   render: function() {
 
+    if (this.state.poll === null) {
+      return <Loading />;
+    }
+
     let totalVotes = 0;
-    this.state.options.forEach((option) => { totalVotes += option.votes; });
+    this.state.poll.options.forEach((option) => { totalVotes += option.votes; });
 
     // Sort
-    let options = _.sortBy(this.state.options, 'votes');
+    let options = _.sortBy(this.state.poll.options, 'votes');
     options.reverse();
 
     options = options.map((option, i) => {

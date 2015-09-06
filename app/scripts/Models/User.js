@@ -8,6 +8,10 @@ class User {
     this.username = null;
   }
 
+  isCurrentStreamer (streamerUsername) {
+    return this.streamer && this.username === streamerUsername;
+  }
+
 }
 
 export default new User();
