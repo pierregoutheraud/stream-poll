@@ -56,7 +56,8 @@ var User = (function () {
   _createClass(User, [{
     key: 'subscribeToStreamer',
     value: function subscribeToStreamer(streamerUsername) {
-      this.subscribeToStreamer = streamerUsername;
+      // Subscribe to streamer
+      this.subscribedToStreamer = streamerUsername;
     }
   }]);
 
@@ -89,14 +90,13 @@ var Api = (function () {
           user = new User(data, socket);
           _this.users.push(user);
           socket.emit('user:new', data);
+          _this.notifySubscribersOf(user, { connected: true });
         });
 
         /* New POLL */
         socket.on('poll:new', function (data) {
           var question = data.question;
           var options = data.options;
-
-          console.log(question, options);
 
           var poll = new PollModel({
             question: question
@@ -107,7 +107,7 @@ var Api = (function () {
 
               user.polls.push(poll); // Save poll of streamer
               socket.emit('poll:new', poll);
-              _this.notifySubscribers(user, poll);
+              _this.notifySubscribersOf(user, { poll: poll });
             });
           });
         });
@@ -171,10 +171,20 @@ var Api = (function () {
 
         socket.on('subscribeTo:poll', function (data) {
           user.poll_id = data.id;
-          console.log('user subscribed to poll', user.socket.id);
+          console.log('user subscribed to poll', data);
         });
 
         socket.on('subscribeTo:streamer', function (streamer) {
+
+          /*
+          // Check if streamer is connected
+          if (this.getUserByUsername(streamer.username)) {
+            user.socket.emit('streamer:connected', true);
+          } else {
+            user.socket.emit('streamer:connected', false);
+          }
+          */
+
           user.subscribeToStreamer(streamer.username);
           _this.notifySubscriber(user);
           console.log('user subscribed to streamer', streamer.username);
@@ -187,34 +197,42 @@ var Api = (function () {
       });
     }
   }, {
+    key: 'getUserByUsername',
+    value: function getUserByUsername(username) {
+      return _.findWhere(this.users, { username: username });
+    }
+  }, {
     key: 'notifySubscriber',
     value: function notifySubscriber(user) {
-      console.log(this.users);
-      var streamer = _.findWhere(this.users, { username: user.subscribeToStreamer });
+      // console.log(this.users);
+      var streamer = this.getUserByUsername(user.subscribedToStreamer);
 
       // If streamer is connected
       if (streamer) {
-
         var lastPoll = streamer.polls[streamer.polls.length - 1]; // get current poll (last one)
-
         // If at least one poll created
         if (lastPoll) {
-          user.socket.emit('streamer:newPoll', {
-            _id: lastPoll._id
+          user.socket.emit('streamer:update', {
+            poll: lastPoll
+          });
+        } else {
+          user.socket.emit('streamer:update', {
+            connected: true
           });
         }
+      } else {
+        user.socket.emit('streamer:update', {
+          connected: false
+        });
       }
     }
   }, {
-    key: 'notifySubscribers',
-    value: function notifySubscribers(streamer, poll) {
-
-      var subscribers = _.where(this.users, { subscribeToStreamer: streamer.username });
+    key: 'notifySubscribersOf',
+    value: function notifySubscribersOf(streamer, data) {
+      var subscribers = _.where(this.users, { subscribedToStreamer: streamer.username });
       subscribers.forEach(function (subscriber, i) {
-        console.log('subscriber ' + subscriber.socket.id + ' has been notified about new poll ' + poll._id);
-        subscriber.socket.emit('streamer:newPoll', {
-          _id: poll._id
-        });
+        console.log('subscriber ' + subscriber.socket.id + ' has been notified about', data);
+        subscriber.socket.emit('streamer:update', data);
       });
     }
   }, {
@@ -223,7 +241,10 @@ var Api = (function () {
       console.log('new vote !');
       for (var i = 0, l = this.users.length; i < l; i++) {
         var user = this.users[i];
+        // console.log(user, this.users);
+        console.log(user.id);
         if (user.poll_id == poll_id) {
+          console.log('poll:update to ', user.id);
           user.socket.emit('poll:update', option);
         }
       }
@@ -232,6 +253,7 @@ var Api = (function () {
     key: 'removeUser',
     value: function removeUser(user) {
       if (typeof user === 'undefined') return false;
+      this.notifySubscribersOf(user, { connected: false });
       for (var i = 0, l = this.users.length; i < l; i++) {
         if (user.socket.id == this.users[i].socket.id) {
           console.log('remove poll !', i);
