@@ -29,7 +29,7 @@ var Layout = React.createClass({
     return (
 
       <div className="app ">
-        <Loading />;
+        <Loading />
       </div>
 
     );
