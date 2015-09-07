@@ -10,6 +10,4 @@ if (CONFIG.ENV === 'dev') {
   CONFIG.TWITCH_CLIENT_ID = '8z8ljzqpkn3m7lsc0anv9w3wlouiox0';
 }
 
-console.log(CONFIG);
-
 export default CONFIG;

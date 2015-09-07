@@ -10,14 +10,9 @@ import { history } from 'react-router/lib/BrowserHistory';
 React.render((
 
   <Router history={history}>
-
     <Route path="/" name="home" component={Home} ></Route>
-
     <Route path="/login" name="login" component={Login} ></Route>
-
     <Route path="/:username" name="layout" component={Widgets} ></Route>
-
-
   </Router>
 
 ), document.body);

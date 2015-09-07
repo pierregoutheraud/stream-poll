@@ -67,6 +67,7 @@
         bottom: 0;
         left: 50%;
         margin-left: -200px;
+        z-index: 1;
       }
 
       // .opacity-appear {
@@ -81,31 +82,35 @@
 
       .widget-appear {
         opacity: 0.01;
-        transform: translateX(100px);
+        transform: translateY(100px);
         transition: all 500ms ease;
       }
       .widget-appear.widget-appear-active {
-        transform: translateX(0);
+        transform: translateY(0);
         opacity: 1;
       }
 
       .widget-enter {
+        z-index: 2;
         opacity: 0.01;
-        transform: translateX(100px);
+        // transform: translateY(100%);
       }
       .widget-enter.widget-enter-active {
+        z-index: 2;
         opacity: 1;
-        transform: translateX(0);
-        transition: all 500ms ease;
+        // transform: translateY(0);
+        transition: all 600ms ease;
       }
 
       .widget-leave {
+        z-index: 1;
         opacity: 1;
-        transform: translateX(0);
+        // transform: translateY(0);
       }
       .widget-leave.widget-leave-active {
+        z-index: 1;
         opacity: 0.01;
-        transform: translateX(-100px);
+        // transform: translateY(100%);
         transition: all 500ms ease;
       }
 

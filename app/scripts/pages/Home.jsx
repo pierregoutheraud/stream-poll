@@ -3,6 +3,7 @@ import { Link, Router, Navigation } from 'react-router';
 // import _twitch_ from 'twitch-sdk/twitch.min.js';
 import TwitchSDK from 'utils/TwitchSDK.js';
 import user from 'Models/User.js';
+import _ from 'underscore';
 
 let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
@@ -18,27 +19,32 @@ var Home = React.createClass({
         options: [
           {
             value: 'League of Legends',
+            currentVote: 0,
             votes: 1432
           },
           {
             value: 'Counter Strike',
+            currentVote: 0,
             votes: 771
           },
           {
             value: 'Dota 2',
+            currentVote: 0,
             votes: 390
           }
-        ]
+        ],
       },
       {
         question: 'Is that guy cheating?',
         options: [
           {
             value: 'Yes',
+            currentVote: 0,
             votes: 88
           },
           {
             value: 'No',
+            currentVote: 0,
             votes: 7
           }
         ]
@@ -48,14 +54,17 @@ var Home = React.createClass({
         options: [
           {
             value: 'Magic hat',
+            currentVote: 0,
             votes: 145
           },
           {
             value: 'Sword',
-            votes: 130
+            currentVote: 0,
+            votes: 112
           },
           {
             value: 'Rope',
+            currentVote: 0,
             votes: 22
           }
         ]
@@ -69,17 +78,55 @@ var Home = React.createClass({
   },
 
   componentDidMount: function() {
-    this.initSlider();
+    this.addVotes();
   },
 
-  initSlider: function() {
-    setInterval(() => {
-      let current = this.state.current === (this.state.polls.length - 1) ? 0 : this.state.current + 1;
-      console.log('NEXT!', current);
-      this.setState({
-        current: current
-      });
-    }, 5000);
+  nextPoll: function () {
+
+    let current = this.state.current === (this.state.polls.length - 1) ? 0 : this.state.current + 1;
+    // console.log('5s ! NEXT', current);
+
+    // reset votes
+    let poll = this.state.polls[current];
+    poll.options.forEach((option,i)=> {
+      option.currentVote = 0;
+    });
+
+    this.setState({
+      polls: this.state.polls,
+      current: current
+    });
+
+    this.addVotes();
+
+  },
+
+  addVotes: function() {
+
+    let poll = this.state.polls[this.state.current];
+
+    let winner = _.max(poll.options, function(option){ return option.votes; });
+    // console.log(maxVotes);
+
+    poll.options.forEach((option,i)=>{
+      if (option.currentVote < option.votes) option.currentVote += Math.floor((Math.random() * (winner.votes/30)) + 5);
+    });
+
+    this.setState({
+      poll: poll
+    });
+
+    if (winner.currentVote > winner.votes) {
+      setTimeout(() => {
+        this.nextPoll();
+      }, 2000);
+    } else {
+      setTimeout(() => {
+        this.addVotes();
+      }, 100);
+    }
+
+
   },
 
   signin: function(e) {
@@ -103,11 +150,14 @@ var Home = React.createClass({
 
         let countVotes = 0;
         poll.options.forEach((option,i) => {
-          countVotes += option.votes;
+          countVotes += option.currentVote;
         });
 
-        let options = poll.options.map((option, j) => {
-          let percentage = Math.round((option.votes * 100) / countVotes);
+        let options = _.sortBy(poll.options, 'currentVote');
+        options.reverse();
+
+        options = options.map((option, j) => {
+          let percentage = Math.round((option.currentVote * 100) / countVotes);
           return (
             <li key={"option"+j} className="option option--result">
               <table >
@@ -120,7 +170,7 @@ var Home = React.createClass({
                     <div className="option__results__bar">
                     <div className="option__results__bar__progress" style={{width: percentage + "%"}}></div>
                     </div><div className="option__results__votes" >
-                    <strong ><span>{option.votes}</span> <span>votes</span></strong>
+                    <strong ><span>{option.currentVote}</span> <span>votes</span></strong>
                     <span> (</span><span>{percentage}</span>
                     <span>%)</span>
                     </div>
