@@ -40,8 +40,8 @@
       font-size: 23px;
       color: white;
       font-weight: 300;
-      // font-style: italic;
       min-height: 70px;
+      padding: 0 30px;
     }
 
     // .home__header__screen {
@@ -122,29 +122,40 @@
   }
 
   &__cols {
-    display: inline-block;
+    display: flex;
     height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 
-    &__container {
-      position: relative;
-       top: 50%;
-       transform: translateY(-50%);
-    }
+    // &__container {
+    //   position: relative;
+    //    top: 50%;
+    //    transform: translateY(-50%);
+    // }
   }
 
   &__col {
-    float: left;
+
+    position: relative;
+
+    &__content {
+
+    }
+
+    flex: 1;
     h2 {
       margin-bottom: 15px;
       font-size: 25px;
     }
     p {
       margin-bottom: 15px;
+      padding: 0 20px;
     }
   }
 
-  &__col + &__col {
-    margin-left: 100px;
-  }
+  // &__col + &__col {
+  //   margin-left: 100px;
+  // }
 
 }

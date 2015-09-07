@@ -69,6 +69,10 @@ var Home = React.createClass({
   },
 
   componentDidMount: function() {
+    this.initSlider();
+  },
+
+  initSlider: function() {
     setInterval(() => {
       let current = this.state.current === (this.state.polls.length - 1) ? 0 : this.state.current + 1;
       console.log('NEXT!', current);
@@ -92,8 +96,6 @@ var Home = React.createClass({
 
     let polls = [];
     for (let i=0;i< this.state.polls.length;i++) {
-
-      console.log(i, this.state.current);
 
       if (i === this.state.current) {
 
@@ -156,7 +158,7 @@ var Home = React.createClass({
 
         <header className="home__header">
           <Link to={"/"} className="logo" ><span>beta</span></Link>
-          <p>Ask a question to your viewers and find out what they think.</p>
+          <p>Ask a question to your twitch viewers and find out what they think.</p>
           <div className="home__header__results">
             <ReactCSSTransitionGroup transitionName="widget" transitionAppear={true} >
               { polls }
@@ -168,28 +170,27 @@ var Home = React.createClass({
 
           <div className="home__cols">
 
-            <div className="home__cols__container clearfix">
-
               <div className="home__col">
+                <div className="home__col__content">
                 <h2>You are a streamer</h2>
                 <p>Sign-in via Twitch and create polls for your viewers</p>
                 <a href="" onClick={this.signin} className="twitch-signin" >
                   <img src='https://camo.githubusercontent.com/e3dadf5d1f371961805e6843fc7d9d611a1d14b5/687474703a2f2f7474762d6170692e73332e616d617a6f6e6177732e636f6d2f6173736574732f636f6e6e6563745f6461726b2e706e67'/>
                 </a>
+                </div>
               </div>
 
               <div className="home__col">
-                <h2>You are a viewer</h2>
-                <p>Give your opinion to your favorite streamer</p>
+                <div className="home__col__content">
+                  <h2>You are a viewer</h2>
+                  <p>Give your opinion to your favorite streamer</p>
 
-                <div className="input-group">
-                  <input ref="streamerUsername" type="text" className="input" placeholder="streamer username"/>
-                  <button type="button" className="btn btn--black" onClick={this.watch}>ok</button>
+                  <div className="input-group">
+                    <input ref="streamerUsername" type="text" className="input" placeholder="streamer username"/>
+                    <button type="button" className="btn btn--black" onClick={this.watch}>ok</button>
+                  </div>
                 </div>
-
               </div>
-
-            </div>
 
           </div>
 
