@@ -158,7 +158,7 @@ var Home = React.createClass({
 
         <header className="home__header">
           <Link to={"/"} className="logo" ><span>beta</span></Link>
-          <p>Ask a question to your twitch viewers and find out what they think.</p>
+          <p>Ask questions to your viewers and find out what they think</p>
           <div className="home__header__results">
             <ReactCSSTransitionGroup transitionName="widget" transitionAppear={true} >
               { polls }
