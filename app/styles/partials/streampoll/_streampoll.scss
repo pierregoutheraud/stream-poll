@@ -134,6 +134,9 @@
 
     &__results {
 
+    // position: relative;
+    // top: -1px;
+
     // @extend .clearfix;
     height: $resultsHeight;
     width: 100%;
@@ -142,13 +145,13 @@
     // position: relative;
     // top: -1px;
 
-    border: 1px solid percent-color(90);
+    // border: 1px solid percent-color(90);
 
       &__bar {
         float: left;
-        width: 50%;
+        width: 100%;
         height: $resultsHeight;
-        background-color: percent-color(96);
+        background-color: percent-color(94);
         position: relative;
         &__progress {
           position: absolute;
@@ -162,11 +165,12 @@
       }
 
       &__votes {
-        float: right;
+        // float: right;
         font-size: 14px;
-        height: $resultsHeight;
-        line-height: $resultsHeight;
-        width: 50%;
+        margin-top: 5px;
+        // height: $resultsHeight;
+        // line-height: $resultsHeight;
+        // width: 50%;
 
         strong {
           font-weight: 700;
