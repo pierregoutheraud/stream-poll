@@ -68,22 +68,14 @@
         left: 50%;
         margin-left: -200px;
         z-index: 1;
-      }
 
-      // .opacity-appear {
-      //   opacity: 0.01;
-      //   transform: translateX(50px);
-      //   transition: opacity 300ms ease, transform 300ms ease;
-      // }
-      // .opacity-appear.opacity-appear-active {
-      //   transform: translateX(0);
-      //   opacity: 1;
-      // }
+        transition: all 500ms ease;
+      }
 
       .widget-appear {
         opacity: 0.01;
         transform: translateY(100px);
-        transition: all 500ms ease;
+        // transition: all 500ms ease;
       }
       .widget-appear.widget-appear-active {
         transform: translateY(0);
@@ -99,7 +91,7 @@
         z-index: 2;
         opacity: 1;
         // transform: translateY(0);
-        transition: all 600ms ease;
+        // transition: all 600ms ease;
       }
 
       .widget-leave {
@@ -111,7 +103,7 @@
         z-index: 1;
         opacity: 0.01;
         // transform: translateY(100%);
-        transition: all 500ms ease;
+        // transition: all 500ms ease;
       }
 
     }

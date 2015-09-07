@@ -1,11 +1,15 @@
 .loading {
 
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   left: 0;
   bottom: 0;
   text-align: center;
+
+  &--fixed {
+    position: fixed;
+  }
 
   p {
     margin-top: 50px;

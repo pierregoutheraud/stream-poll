@@ -12,7 +12,7 @@ var Home = React.createClass({
 
     let defaultOptionsNumber = 4;
     let options = [];
-    for(let i=0;i<defaultOptionsNumber;i++) {
+    for(let i=0;i< defaultOptionsNumber;i++) {
       options.push('');
     }
 
@@ -35,6 +35,12 @@ var Home = React.createClass({
     this.setState({
       options: this.state.options
     });
+  },
+
+  onKeyUp: function(e) {
+    if (e.keyCode == 13) {
+      this.send();
+    }
   },
 
   onAddOption: function(e) {
@@ -66,16 +72,20 @@ var Home = React.createClass({
       options: options
     };
 
-    if (data.question.length && data.options.length > 1) {
-      this.setState({ creating: true });
+    console.log(data.options);
 
+    if (!data.question.length) {
+      alert('Please, type a question.');
+    } else if (data.options.length <= 1) {
+      alert('Please, type more than one option.')
+    } else {
+
+      this.setState({ creating: true });
       api.postPoll(data).then((poll) => {
         // this.transitionTo('/' + this.props.params.username + '/' + poll._id);
         this.props.gotoVote( poll );
       });
 
-    } else {
-      console.error('incorrect form');
     }
 
   },
@@ -86,7 +96,15 @@ var Home = React.createClass({
       return (
         <li key={i} className="option home__option" >
           <div className="option__case">{i+1}</div>
-          <input className="option__input input" ref={"option"+i} onChange={this.onChangeOption.bind(this,i)} placeholder="Type an option here" type="text" value={value} />
+          <input
+            className="option__input input"
+            ref={"option"+i}
+            placeholder="Type an option here"
+            type="text"
+            value={value}
+            onChange={this.onChangeOption.bind(this,i)}
+            onKeyUp={this.onKeyUp}
+          />
           <a className="option__remove" href="" onClick={this.onRemoveOption.bind(this,i)}>(-)</a>
         </li>
       );
@@ -107,7 +125,7 @@ var Home = React.createClass({
         <h1>Ask a question to your viewers<br/>and find out what they think.</h1>
         <p className="advice" >
           This poll and your next ones are available here: <a href={currentURL} className="link link--green" >{currentURL}</a>
-        <br/>Share this url with your viewers!
+        <br/>Share it with your viewers!
         </p>
 
           <textarea

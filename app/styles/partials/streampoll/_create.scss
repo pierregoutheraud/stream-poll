@@ -2,18 +2,18 @@
 
   text-align: center;
 
-  .advice {
-    font-size: 18px;
-    font-style: italic;
-    color: percent-color(20);
-    margin-bottom: 30px;
-  }
-
   h1 {
     font-size:28px;
     margin-bottom: 20px;
     padding: 0 30px;
     font-weight: 700;
+  }
+
+  .advice {
+    font-size: 16px;
+    font-style: italic;
+    color: percent-color(20);
+    margin-bottom: 30px;
   }
 
   textarea.home__question {
@@ -26,9 +26,7 @@
   }
 
   footer .btn {
-    display: inline-block;
-    margin: 0 0 20px 0;
-    // width: calc(100%);
+    width: 100%;
   }
 
 }

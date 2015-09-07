@@ -2,16 +2,17 @@
 
   footer {
 
-    margin: 0 0 20px 0;
+    // margin: 0 0 20px 0;
 
     .btn--green {
-      margin-right: 5px;
-      width: calc(50% - 25px);
+      flex: 2;
+      // margin-right: 5px;
+      // width: calc(50% - 25px);
     }
 
     .btn--black {
-      margin-left: 5px;
-      width: calc(50% - 25px);
+      margin-left: 15px;
+      // width: calc(50% - 25px);
     }
 
   }
