@@ -1,5 +1,11 @@
 .widget--streampoll {
 
+  background-color: white;
+
+  .widget__header {
+    display: none;
+  }
+
   &__main {
     padding: 30px 30px;
     text-align: center;

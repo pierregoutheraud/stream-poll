@@ -104,9 +104,10 @@ var Home = React.createClass({
 
       <div className="create">
 
-        <h1>Ask a question to your viewers and find out what they think.</h1>
+        <h1>Ask a question to your viewers<br/>and find out what they think.</h1>
         <p className="advice" >
-          Share this url with your viewers: <a href={currentURL} className="link link--green" >{currentURL}</a>
+          This poll and your next ones are available here: <a href={currentURL} className="link link--green" >{currentURL}</a>
+        <br/>Share this url with your viewers!
         </p>
 
           <textarea
@@ -123,7 +124,7 @@ var Home = React.createClass({
           </ul>
 
         <footer>
-          <button type="submit" className="btn btn--green" onClick={onClickSubmit} >{submitText}</button>
+          <button type="submit" className="btn btn--green" onClick={onClickSubmit} ><i className="fa fa-check"></i>{submitText}</button>
         </footer>
 
       </div>
