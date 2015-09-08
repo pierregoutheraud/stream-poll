@@ -5,21 +5,21 @@ import user from 'Models/User.js';
 
 class Api {
 
-  constructor() {
+  constructor () {
     this.socket = io.connect(CONFIG.SOCKET_ENDPOINT);
     this.socket.on('connect', () => {
       console.log('Websocket connected !');
     });
   }
 
-  listenToPoll(id, callback) {
+  listenToPoll (id, callback) {
     this.socket.on('poll:update', (data) => {
       callback(data);
     });
     this.socket.emit('subscribeTo:poll', {id});
   }
 
-  listenToStreamer( user, streamerUsername, callback ) {
+  listenToStreamer ( user, streamerUsername, callback ) {
     // return new Promise((resolve, reject) => {
       if (!user.streamer) {
         this.socket.on('streamer:update', (data) => {
@@ -30,7 +30,7 @@ class Api {
     // });
   }
 
-  newUser( streamerUsername ) {
+  newUser ( streamerUsername ) {
     let data = {
       id: user.id,
       username: user.username,
@@ -43,8 +43,8 @@ class Api {
     return this.emit('poll:new', data);
   }
 
-  getPoll (poll_id) {
-    return this.emit('poll:get', {poll_id});
+  getPoll (username) {
+    return this.emit('poll:get', {username});
   }
 
   vote (poll_id, option_id, value) {

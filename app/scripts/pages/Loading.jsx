@@ -4,7 +4,7 @@ var Loading = React.createClass({
   render: function() {
     return (
       <div className="loading">
-        <p>Loading...</p>
+        <p>{ this.props.text || "Loading..." }</p>
       </div>
     );
   }

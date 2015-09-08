@@ -43,7 +43,7 @@ class User {
     this.username = data.username;
     this.streamer = data.streamer;
     this.socket = socket;
-    this.polls = [];
+    // this.polls = []; // Maybe later ?
   }
 
   subscribeToStreamer (streamerUsername) {
@@ -81,16 +81,17 @@ class Api {
       /* New POLL */
       socket.on('poll:new', (data) => {
 
-        let { question, options } = data;
+        let { question, options, username } = data;
 
         let poll = new PollModel({
-          question: question
+          question: question,
+          username: username
         });
 
-        this.db.saveOptionsAndPoll(options, poll, () => {
+        this.db.saveOptions(options, poll, () => {
           this.db.savePoll(poll).then((poll) => {
 
-            user.polls.push(poll); // Save poll of streamer
+            // user.polls.push(poll); // Save poll of streamer
             socket.emit('poll:new', poll);
             this.notifySubscribersOf(user, {poll});
 
@@ -102,20 +103,8 @@ class Api {
       /* Get Poll */
       socket.on('poll:get', (data) => {
 
-        let poll_id = data.poll_id;
-
-        let query = PollModel.findOne().where('_id').equals(poll_id).populate('options')
-        query.exec().addBack((err, poll) => {
-          if (err) console.error(err)
-
-          if (!poll) {
-            // res.status(404).json({
-            //   error: 'Poll not found'
-            // });
-          }
-          else {
-            socket.emit('poll:get', poll);
-          }
+        this.db.findLastPollByUsername(data.username).then((poll) => {
+          socket.emit('poll:get', poll);
         });
 
       });
@@ -137,7 +126,7 @@ class Api {
           let query = PollModel.findOne().where('_id').equals(poll_id);
           query.exec().addBack((err, poll) => {
             let options = [value];
-            this.db.saveOptionsAndPoll(options, poll, (options) => { // Save option and vote at same time with last param at true
+            this.db.saveOptions(options, poll, (options) => { // Save option and vote at same time with last param at true
               let option = options[0]; // Since we only saved 1 new option
               this.db.savePoll(poll).then((poll) => {
                 socket.emit('vote:new', option);
@@ -198,24 +187,19 @@ class Api {
     // console.log(this.users);
     let streamer = this.getUserByUsername(user.subscribedToStreamer);
 
-    // If streamer is connected
-    if (streamer) {
-      let lastPoll = streamer.polls[ streamer.polls.length - 1 ]; // get current poll (last one)
-      // If at least one poll created
-      if (lastPoll) {
-        user.socket.emit('streamer:update', {
-          poll: lastPoll
-        });
-      } else {
-        user.socket.emit('streamer:update', {
-          connected: true
-        });
-      }
-    } else {
-      user.socket.emit('streamer:update', {
-        connected: false
-      });
-    }
+    this.db.findLastPollByUsername(user.subscribedToStreamer).then((poll,) => {
+
+      let data = {
+        poll: poll,
+        connected: streamer ? true : false
+      };
+
+      console.log('streamer:update', data);
+
+      user.socket.emit('streamer:update', data);
+
+    });
+
   }
 
   notifySubscribersOf (streamer, data) {

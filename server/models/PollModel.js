@@ -9,8 +9,13 @@ let PollSchema = new Schema({
     unique: true,
     'default': shortId.generate
   },
+  created_at : {
+    type: Date,
+    default: Date.now
+  },
   question: String,
-  options: [{type: String, ref: 'Option'}]
+  options: [{type: String, ref: 'Option'}],
+  username: String
 }, { versionKey: false });
 
 module.exports = mongoose.model('Poll', PollSchema);

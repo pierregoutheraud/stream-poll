@@ -62,8 +62,7 @@ var Layout = React.createClass({
 
     return {
       widgets: widgets,
-      loading: true,
-      loginPopover: false
+      loading: true
     };
   },
 
@@ -94,7 +93,6 @@ var Layout = React.createClass({
         api.newUser( this.props.params.username ).then((user) => {
           console.log('New user', user);
           this.setState({
-            loginPopover: false,
             loading: false
           });
         });
@@ -130,11 +128,6 @@ var Layout = React.createClass({
   signin: function(e) {
     if (e) e.preventDefault();
     TwitchSDK.signin();
-  },
-
-  closeSignin: function(e) {
-    e.preventDefault();
-    this.setState({ loginPopover: false });
   },
 
   moveRight: function(i) {
@@ -189,7 +182,7 @@ var Layout = React.createClass({
   render: function() {
 
     if (this.state.loading) {
-      return <Loading />
+      return <Loading text="Loading widgets..." />
     };
 
     let widgetsFunctions = {
@@ -280,35 +273,9 @@ var Layout = React.createClass({
       );
     }
 
-    let stylePopoverLogin = {
-      display: this.state.loginPopover ? 'block' : 'none'
-    };
-
     return (
 
       <div className="app ">
-
-        <div className="popover-login popover" style={stylePopoverLogin}>
-          <div className="popover__content">
-
-            <header className="logo-header">
-              <Link to={"/"} className="logo" ></Link>
-            </header>
-
-            <div className="popover__content__body">
-
-              <a href="" onClick={this.closeSignin} className="popover__close" >skip</a>
-
-              <p>Sign-in via Twitch<br/>and create polls for your viewers</p>
-              <a href="" onClick={this.signin} className="twitch-signin" >
-                <img src='https://camo.githubusercontent.com/e3dadf5d1f371961805e6843fc7d9d611a1d14b5/687474703a2f2f7474762d6170692e73332e616d617a6f6e6177732e636f6d2f6173736574732f636f6e6e6563745f6461726b2e706e67'/>
-              </a>
-
-            </div>
-
-          </div>
-          <div className="popover__background" onClick={this.closeSignin} ></div>
-        </div>
 
         <div className="app__content">
 
