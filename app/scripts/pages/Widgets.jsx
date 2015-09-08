@@ -77,15 +77,8 @@ var Layout = React.createClass({
       if (user.authenticated) {
 
         api.newUser( this.props.params.username ).then((user) => {
-
           console.log('New user', user);
-
-          // if (typeof this.props.children === 'undefined' && user.streamer) {
-          //   this.replaceWith('/'+this.props.params.username+'/c');
-          // }
-
           this.setState({ loading: false });
-
         });
 
       } else {
