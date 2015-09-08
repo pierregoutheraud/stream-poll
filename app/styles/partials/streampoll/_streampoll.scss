@@ -130,25 +130,16 @@
       display: none;
     }
 
-    $resultsHeight: 28px;
-
     &__results {
 
-    // @extend .clearfix;
-    height: $resultsHeight;
-    width: 100%;
-    z-index: 2;
-
-    // position: relative;
-    // top: -1px;
-
-    border: 1px solid percent-color(90);
+      margin-top: -1px;
+      height: 25px;
+      z-index: 2;
+      display: flex;
 
       &__bar {
-        float: left;
-        width: 50%;
-        height: $resultsHeight;
-        background-color: percent-color(96);
+        flex: 1;
+        background-color: percent-color(90);
         position: relative;
         &__progress {
           position: absolute;
@@ -158,15 +149,32 @@
           background-color: $green;
           width: 0%;
           transition: 300ms all ease;
+          line-height: normal;
+          text-align: right;
+
+          > span {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 5px;
+            background-color: rgba(0,0,0,.2);
+            border-radius: 3px;
+            color: white;
+            font-size: 12px;
+            padding: 0 7px;
+            strong {
+              font-size: 14px;
+            }
+          }
         }
       }
 
       &__votes {
-        float: right;
+        border: 1px solid percent-color(90);
+        border-left: none;
+        width: 100px;
         font-size: 14px;
-        height: $resultsHeight;
-        line-height: $resultsHeight;
-        width: 50%;
+        height: 25px;
+        line-height: 25px;
 
         strong {
           font-weight: 700;
