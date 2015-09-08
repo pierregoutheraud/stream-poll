@@ -76,15 +76,16 @@ var StreampollResults = React.createClass({
               <td className="option__case" >{i+1}</td>
               <td className="option__value" >{ option.value }</td>
             </tr>
-            <tr >
-              <td className="option__results" colSpan="2" >
-                <div className="option__results__bar">
-                  <div className="option__results__bar__progress" style={styleProgressbar} ></div>
-                </div>
-                <div className="option__results__votes"><strong>{ option.votes } { option.votes > 1 ? 'votes' : 'vote' }</strong> ({percentage}%)</div>
-              </td>
-            </tr>
           </table>
+
+          <div className="option__results" colSpan="2" >
+            <div className="option__results__bar">
+              <div className="option__results__bar__progress" style={styleProgressbar} >
+                <span><strong>{percentage}</strong>%</span>
+              </div>
+            </div>
+            <div className="option__results__votes"><strong>{ option.votes }</strong> { option.votes > 1 ? 'votes' : 'vote' }</div>
+          </div>
 
           {
           /*

@@ -84,7 +84,6 @@ var Home = React.createClass({
   nextPoll: function () {
 
     let current = this.state.current === (this.state.polls.length - 1) ? 0 : this.state.current + 1;
-    // console.log('5s ! NEXT', current);
 
     // reset votes
     let poll = this.state.polls[current];
@@ -116,7 +115,7 @@ var Home = React.createClass({
       poll: poll
     });
 
-    if (winner.currentVote > winner.votes) {
+    if (winner.currentVote >= winner.votes) {
       setTimeout(() => {
         this.nextPoll();
       }, 2000);
@@ -160,24 +159,23 @@ var Home = React.createClass({
           let percentage = Math.round((option.currentVote * 100) / countVotes);
           return (
             <li key={"option"+j} className="option option--result">
-              <table >
-                <tbody>
-                  <tr>
-                    <td className="option__case" >{j+1}</td>
-                    <td className="option__value">{option.value}</td>
-                    </tr>
-                    <tr ><td className="option__results" colSpan="2" >
-                    <div className="option__results__bar">
-                    <div className="option__results__bar__progress" style={{width: percentage + "%"}}></div>
-                    </div><div className="option__results__votes" >
-                    <strong ><span>{option.currentVote}</span> <span>votes</span></strong>
-                    <span> (</span><span>{percentage}</span>
-                    <span>%)</span>
-                    </div>
-                    </td>
-                  </tr>
-                </tbody>
+              
+              <table>
+                <tr>
+                  <td className="option__case" >{j+1}</td>
+                  <td className="option__value">{option.value}</td>
+                </tr>
               </table>
+
+              <div className="option__results" colSpan="2" >
+                <div className="option__results__bar">
+                  <div className="option__results__bar__progress" style={{width: percentage + "%"}} >
+                    <span><strong>{percentage}</strong>%</span>
+                  </div>
+                </div>
+                <div className="option__results__votes"><strong>{ option.currentVote }</strong> { option.currentVote > 1 ? 'votes' : 'vote' }</div>
+              </div>
+
             </li>
           )
         });
