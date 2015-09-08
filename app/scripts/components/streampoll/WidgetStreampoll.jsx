@@ -87,7 +87,7 @@ var WidgetTwitchLive = React.createClass({
   render: function() {
 
     if (this.state.loading) {
-      return <Loading text="Fetch streamer infos..."/>;
+      return <Loading text="Fetching streamer infos..."/>;
     }
 
     let content;
@@ -168,10 +168,6 @@ var WidgetTwitchLive = React.createClass({
 
         <div className="popover-login popover" style={stylePopoverLogin}>
           <div className="popover__content">
-
-            <header className="logo-header">
-              <Link to={"/"} className="logo" ></Link>
-            </header>
 
             <div className="popover__content__body">
 

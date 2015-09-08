@@ -7,10 +7,17 @@ class TwitchSDK {
 
   constructor () {
 
+    // Get token localStorage and set in sessionStorage for twitch js sdk
+    let twitch_oauth_session = store.get('twitch_oauth_session');
+    if (twitch_oauth_session && !window.sessionStorage.getItem('twitch_oauth_session')) {
+      window.sessionStorage.setItem('twitch_oauth_session', JSON.stringify(twitch_oauth_session));
+    }
+
     Twitch.init({
       clientId: CONFIG.TWITCH_CLIENT_ID
     }, (error, status) => {
       if (error) console.error( error );
+      console.log('twitch init', status);
     });
 
   }
@@ -21,7 +28,21 @@ class TwitchSDK {
 
       Twitch.getStatus((error, status) => {
         if (error) console.error( error );
-        resolve( this.checkIfLogged(status, streamerUsername) );
+
+        // Old
+        // resolve( this.checkIfLogged(status, streamerUsername) );
+
+        if (status.authenticated) {
+
+          // Get token in sessionStorage and stock in localStorage
+          let twitch_oauth_session = window.sessionStorage.getItem('twitch_oauth_session');
+          store.set('twitch_oauth_session', JSON.parse(twitch_oauth_session));
+
+          resolve(this.getUserInfos(streamerUsername));
+        } else {
+          resolve(user);
+        }
+
       });
 
     });

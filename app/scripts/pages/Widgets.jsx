@@ -175,8 +175,8 @@ var Layout = React.createClass({
   render: function() {
 
     if (this.state.loading) {
-      return <Loading text="Loading widgets..." />
-    };
+      return <Loading text="Loading..." />;
+    }
 
     let widgetsFunctions = {
       'bigger':this.bigger,
