@@ -149,7 +149,9 @@ let StreampollVote = React.createClass({
         <ul className="options">
           { options }
           { newOptions }
-          { this.state.newOptions.length === 0 ? <li className="options__add" ><a href="" onClick={this.onAddOption} >+</a></li> : null }
+          {
+          // { this.state.newOptions.length === 0 ? <li className="options__add" ><a href="" onClick={this.onAddOption} >+</a></li> : null }
+          }
         </ul>
 
         <footer>

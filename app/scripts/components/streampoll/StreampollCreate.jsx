@@ -142,7 +142,7 @@ var Home = React.createClass({
           </ul>
 
         <footer>
-          <button type="submit" className="btn btn--green" onClick={onClickSubmit} ><i className="fa fa-check"></i>{submitText}</button>
+          <button type="submit" className="btn btn--green" onClick={onClickSubmit} >{submitText}</button>
         </footer>
 
       </div>

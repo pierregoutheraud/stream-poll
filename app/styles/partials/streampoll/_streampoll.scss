@@ -130,10 +130,12 @@
       display: none;
     }
 
+    $resultHeight: 25px;
+
     &__results {
 
       margin-top: -1px;
-      height: 25px;
+      height: $resultHeight;
       z-index: 2;
       display: flex;
 
@@ -163,6 +165,7 @@
             padding: 0 7px;
             strong {
               font-size: 14px;
+              font-weight: 600;
             }
           }
         }
@@ -172,12 +175,13 @@
         border: 1px solid percent-color(90);
         border-left: none;
         width: 100px;
-        font-size: 14px;
-        height: 25px;
-        line-height: 25px;
+        font-size: 12px;
+        height: $resultHeight;
+        line-height: $resultHeight;
 
         strong {
-          font-weight: 700;
+          font-size: 14px;
+          font-weight: 600;
         }
       }
 
