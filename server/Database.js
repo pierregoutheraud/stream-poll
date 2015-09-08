@@ -3,6 +3,22 @@ let PollModel = require('./models/PollModel.js'),
 
 class Database {
 
+  findLastPollByUsername (username) {
+    return new Promise((resolve, reject) => {
+
+      let query = PollModel.findOne()
+                            .sort('-created_at')
+                            .where('username')
+                            .equals(username)
+                            .populate('options');
+
+      query.exec().addBack((err, poll) => {
+        if (err) console.error(err)
+        resolve(poll);
+      });
+    });
+  }
+
   savePoll (poll) {
     return new Promise((resolve, reject) => {
       console.log('saving poll...');
@@ -18,7 +34,7 @@ class Database {
   }
 
   // Save options from array and push them to poll
-  saveOptionsAndPoll (optionsToSave, poll, callback, vote=false, optionsSaved=[]) {
+  saveOptions (optionsToSave, poll, callback, vote=false, optionsSaved=[]) {
     console.log(`saveOptionsAndPoll [${optionsSaved.length}]`);
     let optionValue = optionsToSave[optionsSaved.length]; // we get first option value of queue
     let option = new OptionModel({
@@ -37,7 +53,7 @@ class Database {
 
         console.log('this.saveOptionsAndPoll');
 
-        this.saveOptionsAndPoll(optionsToSave, poll, callback, vote, optionsSaved);
+        this.saveOptions(optionsToSave, poll, callback, vote, optionsSaved);
       } else {
         callback(optionsSaved);
       }

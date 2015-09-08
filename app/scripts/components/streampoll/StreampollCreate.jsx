@@ -69,7 +69,8 @@ var Home = React.createClass({
 
     let data = {
       question: this.state.question.trim(),
-      options: options
+      options: options,
+      username: user.username
     };
 
     console.log(data.options);

@@ -129,7 +129,6 @@ let StreampollVote = React.createClass({
         <li key={i} className="option home__option" >
           <div className="option__case"><input type="checkbox" checked={checked} onChange={this.onCheckOption.bind(this,i)} /></div>
           <input className="option__input input" ref="newOption" placeholder="Type an option here" onChange={this.onChangeOption} type="text" value={option.value} />
-          <a className="option__remove" href="" onClick={this.onRemoveOption}>(-)</a>
         </li>
       );
     });

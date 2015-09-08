@@ -16,7 +16,7 @@ var StreampollResults = React.createClass({
   componentWillMount: function() {
 
     // Mise a jour du poll, props --> state
-    api.getPoll( this.props.poll._id ).then((poll) => {
+    api.getPoll( this.props.params.username ).then((poll) => {
       this.listenToPoll(poll);
       this.setState({ poll: poll });
     });
