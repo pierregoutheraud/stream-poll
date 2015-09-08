@@ -13,6 +13,19 @@ var Database = (function () {
   }
 
   _createClass(Database, [{
+    key: 'findLastPollByUsername',
+    value: function findLastPollByUsername(username) {
+      return new Promise(function (resolve, reject) {
+
+        var query = PollModel.findOne().sort('-created_at').where('username').equals(username).populate('options');
+
+        query.exec().addBack(function (err, poll) {
+          if (err) console.error(err);
+          resolve(poll);
+        });
+      });
+    }
+  }, {
     key: 'savePoll',
     value: function savePoll(poll) {
       return new Promise(function (resolve, reject) {
@@ -30,8 +43,8 @@ var Database = (function () {
 
     // Save options from array and push them to poll
   }, {
-    key: 'saveOptionsAndPoll',
-    value: function saveOptionsAndPoll(optionsToSave, poll, callback) {
+    key: 'saveOptions',
+    value: function saveOptions(optionsToSave, poll, callback) {
       var _this = this;
 
       var vote = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
@@ -55,7 +68,7 @@ var Database = (function () {
 
           console.log('this.saveOptionsAndPoll');
 
-          _this.saveOptionsAndPoll(optionsToSave, poll, callback, vote, optionsSaved);
+          _this.saveOptions(optionsToSave, poll, callback, vote, optionsSaved);
         } else {
           callback(optionsSaved);
         }

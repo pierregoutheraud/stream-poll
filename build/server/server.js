@@ -50,7 +50,7 @@ var User = (function () {
     this.username = data.username;
     this.streamer = data.streamer;
     this.socket = socket;
-    this.polls = [];
+    // this.polls = []; // Maybe later ?
   }
 
   _createClass(User, [{
@@ -97,15 +97,17 @@ var Api = (function () {
         socket.on('poll:new', function (data) {
           var question = data.question;
           var options = data.options;
+          var username = data.username;
 
           var poll = new PollModel({
-            question: question
+            question: question,
+            username: username
           });
 
-          _this.db.saveOptionsAndPoll(options, poll, function () {
+          _this.db.saveOptions(options, poll, function () {
             _this.db.savePoll(poll).then(function (poll) {
 
-              user.polls.push(poll); // Save poll of streamer
+              // user.polls.push(poll); // Save poll of streamer
               socket.emit('poll:new', poll);
               _this.notifySubscribersOf(user, { poll: poll });
             });
@@ -115,19 +117,8 @@ var Api = (function () {
         /* Get Poll */
         socket.on('poll:get', function (data) {
 
-          var poll_id = data.poll_id;
-
-          var query = PollModel.findOne().where('_id').equals(poll_id).populate('options');
-          query.exec().addBack(function (err, poll) {
-            if (err) console.error(err);
-
-            if (!poll) {
-              // res.status(404).json({
-              //   error: 'Poll not found'
-              // });
-            } else {
-                socket.emit('poll:get', poll);
-              }
+          _this.db.findLastPollByUsername(data.username).then(function (poll) {
+            socket.emit('poll:get', poll);
           });
         });
 
@@ -149,7 +140,7 @@ var Api = (function () {
             var query = PollModel.findOne().where('_id').equals(poll_id);
             query.exec().addBack(function (err, poll) {
               var options = [value];
-              _this.db.saveOptionsAndPoll(options, poll, function (options) {
+              _this.db.saveOptions(options, poll, function (options) {
                 // Save option and vote at same time with last param at true
                 var option = options[0]; // Since we only saved 1 new option
                 _this.db.savePoll(poll).then(function (poll) {
@@ -207,24 +198,17 @@ var Api = (function () {
       // console.log(this.users);
       var streamer = this.getUserByUsername(user.subscribedToStreamer);
 
-      // If streamer is connected
-      if (streamer) {
-        var lastPoll = streamer.polls[streamer.polls.length - 1]; // get current poll (last one)
-        // If at least one poll created
-        if (lastPoll) {
-          user.socket.emit('streamer:update', {
-            poll: lastPoll
-          });
-        } else {
-          user.socket.emit('streamer:update', {
-            connected: true
-          });
-        }
-      } else {
-        user.socket.emit('streamer:update', {
-          connected: false
-        });
-      }
+      this.db.findLastPollByUsername(user.subscribedToStreamer).then(function (poll) {
+
+        var data = {
+          poll: poll,
+          connected: streamer ? true : false
+        };
+
+        console.log('streamer:update', data);
+
+        user.socket.emit('streamer:update', data);
+      });
     }
   }, {
     key: 'notifySubscribersOf',
