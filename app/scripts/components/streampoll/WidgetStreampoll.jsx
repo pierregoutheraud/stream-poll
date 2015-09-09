@@ -14,7 +14,7 @@ var WidgetTwitchLive = React.createClass({
   getInitialState: function() {
 
     return {
-      current: 'create',
+      current: null,
       poll: null,
       streamerConnected: null,
       hidePopover: false,
@@ -48,7 +48,9 @@ var WidgetTwitchLive = React.createClass({
       });
 
     } else {
+
       this.setState({ loading: false });
+      this.gotoResults();
     }
 
   },
@@ -86,7 +88,7 @@ var WidgetTwitchLive = React.createClass({
 
   render: function() {
 
-    if (this.state.loading) {
+    if (this.state.loading || this.state.current === null) {
       return <Loading text="Fetching streamer infos..."/>;
     }
 

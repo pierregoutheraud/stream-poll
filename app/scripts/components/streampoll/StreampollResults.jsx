@@ -17,6 +17,9 @@ var StreampollResults = React.createClass({
 
     // Mise a jour du poll, props --> state
     api.getPoll( this.props.params.username ).then((poll) => {
+
+      console.log(poll);
+
       this.listenToPoll(poll);
       this.setState({ poll: poll });
     });
@@ -53,7 +56,7 @@ var StreampollResults = React.createClass({
   render: function() {
 
     if (this.state.poll === null) {
-      return <Loading />;
+      return <Loading text="Fetching last poll..." />;
     }
 
     let totalVotes = 0;
@@ -116,7 +119,7 @@ var StreampollResults = React.createClass({
     return (
       <div className="results">
 
-        <h1 className="question" >{ this.props.poll.question }</h1>
+        <h1 className="question" >{ this.state.poll.question }</h1>
 
         <ul className="options">
           {options}
