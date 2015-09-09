@@ -17,11 +17,13 @@ var StreampollResults = React.createClass({
 
     // Mise a jour du poll, props --> state
     api.getPoll( this.props.params.username ).then((poll) => {
-
-      console.log(poll);
-
-      this.listenToPoll(poll);
-      this.setState({ poll: poll });
+      if (!poll) {
+        console.log("No last poll");
+        this.gotoCreate();
+      } else {
+        this.listenToPoll(poll);
+        this.setState({ poll: poll });
+      }
     });
 
   },
@@ -49,14 +51,14 @@ var StreampollResults = React.createClass({
   },
 
   gotoCreate: function(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     this.props.gotoCreate();
   },
 
   render: function() {
 
     if (this.state.poll === null) {
-      return <Loading text="Fetching last poll..." />;
+      return <Loading text="Fetching poll results..." />;
     }
 
     let totalVotes = 0;

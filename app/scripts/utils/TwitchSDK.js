@@ -17,7 +17,6 @@ class TwitchSDK {
       clientId: CONFIG.TWITCH_CLIENT_ID
     }, (error, status) => {
       if (error) console.error( error );
-      console.log('twitch init', status);
     });
 
   }

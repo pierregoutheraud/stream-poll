@@ -32,8 +32,12 @@ var WidgetTwitchLive = React.createClass({
         console.log('listenToStreamer update', data);
 
         // update about poll
-        if (typeof data.poll !== 'undefined' && data.poll) {
-          this.gotoVote(data.poll);
+        if (typeof data.poll !== 'undefined') {
+          if (data.poll) {
+            this.gotoVote(data.poll);
+          } else {
+            this.gotoWaiting();
+          }
         }
 
         // update about connected
@@ -43,16 +47,23 @@ var WidgetTwitchLive = React.createClass({
           });
         }
 
-        this.setState({ loading: false });
-
       });
 
     } else {
-
-      this.setState({ loading: false });
       this.gotoResults();
     }
 
+    this.setState({
+      loading: false
+    });
+
+  },
+
+  gotoWaiting: function() {
+    this.setState({
+      current: 'waiting',
+      poll: null
+    });
   },
 
   gotoCreate: function() {
@@ -95,6 +106,31 @@ var WidgetTwitchLive = React.createClass({
     let content;
 
     switch (this.state.current) {
+      case 'waiting':
+
+        let connect, currentURL = window.location.origin + "/" + this.props.params.username;
+        if (this.state.streamerConnected) {
+          connect = <span>The streamer <strong>is connected</strong> but did not create any poll yet.</span>;
+        }
+        else {
+          connect = <span>The streamer <strong>is not connected</strong> and did not create any poll yet.</span>;
+        }
+
+        content = (
+          <div className="stream-poll__waiting">
+            <p>
+              {connect} <br/>
+              Share this url with him and your friends: <a href={currentURL} className="link link--green" >{currentURL}</a>
+              <br/>
+            </p>
+            <p>Are you {this.props.streamerUsername} ?</p>
+            <a href="" onClick={this.signin} className="twitch-signin" >
+              <img src='https://camo.githubusercontent.com/e3dadf5d1f371961805e6843fc7d9d611a1d14b5/687474703a2f2f7474762d6170692e73332e616d617a6f6e6177732e636f6d2f6173736574732f636f6e6e6563745f6461726b2e706e67'/>
+            </a>
+          </div>
+        );
+        break;
+
       case 'create':
         content = (
           <StreampollCreate
@@ -125,40 +161,8 @@ var WidgetTwitchLive = React.createClass({
         break;
     }
 
-    // If not current streamer
-    if (!user.isCurrentStreamer(this.props.streamerUsername)) {
-
-      if (this.state.poll === null) {
-        content = (
-          <div className="stream-poll__waiting">
-            <p>The streamer did not create any poll yet.<br/>Let's wait for him!</p>
-          </div>
-        );
-      }
-
-      // if (!this.state.streamerConnected) {
-      //
-      //   content = (
-      //     <div className="stream-poll__waiting">
-      //       <p>The streamer is not connected, are you {this.props.streamerUsername} ?</p>
-      //       <a href="" onClick={this.props.signin} className="twitch-signin" >
-      //         <img src='https://camo.githubusercontent.com/e3dadf5d1f371961805e6843fc7d9d611a1d14b5/687474703a2f2f7474762d6170692e73332e616d617a6f6e6177732e636f6d2f6173736574732f636f6e6e6563745f6461726b2e706e67'/>
-      //       </a>
-      //     </div>
-      //   );
-      //
-      // } else if (this.state.poll === null) {
-      //   content = (
-      //     <div className="stream-poll__waiting">
-      //       <p>The streamer is connected, but did not create any poll yet.<br/>Let's wait for him!</p>
-      //     </div>
-      //   );
-      // }
-
-    }
-
     let stylePopoverLogin = {
-      display: (this.state.streamerConnected === false && !this.state.hidePopover) ? 'block' : 'none'
+      display: (this.state.streamerConnected === false && this.state.poll !== null && !this.state.hidePopover) ? 'block' : 'none'
     };
 
     return (
