@@ -83,6 +83,8 @@ var Home = React.createClass({
 
   nextPoll: function () {
 
+    if (!this.isMounted()) return false;
+
     let current = this.state.current === (this.state.polls.length - 1) ? 0 : this.state.current + 1;
 
     // reset votes
@@ -101,6 +103,8 @@ var Home = React.createClass({
   },
 
   addVotes: function() {
+
+    if (!this.isMounted()) return false;
 
     let poll = this.state.polls[this.state.current];
 
@@ -133,6 +137,10 @@ var Home = React.createClass({
     TwitchSDK.signin();
   },
 
+  onKeyUp: function(e) {
+    if (e.keyCode === 13) this.watch();
+  },
+
   watch: function() {
     let streamerUsername = React.findDOMNode(this.refs.streamerUsername).value;
     if (streamerUsername.length) this.transitionTo('/' + streamerUsername);
@@ -159,7 +167,7 @@ var Home = React.createClass({
           let percentage = Math.round((option.currentVote * 100) / countVotes);
           return (
             <li key={"option"+j} className="option option--result">
-              
+
               <table>
                 <tr>
                   <td className="option__case" >{j+1}</td>
@@ -234,8 +242,12 @@ var Home = React.createClass({
                   <p>Give your opinion to your favorite streamer</p>
 
                   <div className="input-group">
-                    <input ref="streamerUsername" type="text" className="input" placeholder="streamer username"/>
-                    <button type="button" className="btn btn--black" onClick={this.watch}>ok</button>
+                    <input ref="streamerUsername" type="text" className="input" onKeyUp={this.onKeyUp} placeholder="streamer username"/>
+                    <button
+                      type="button"
+                      className="btn btn--black"
+
+                      onClick={this.watch}>ok</button>
                   </div>
                 </div>
               </div>
