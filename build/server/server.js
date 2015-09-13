@@ -28,6 +28,14 @@ var TEMP_PATH = path.normalize(__dirname + '/temp');
 
 var os_hostname = os.hostname();
 
+mongoose.connection.on("open", function (ref) {
+  console.log("Connected to mongo server.");
+});
+
+mongoose.connection.on("error", function (err) {
+  console.err("Could not connect to mongo server!", err);
+});
+
 var MONGOOSE_CONNECT = 'mongodb://pierre:microst7@apollo.modulusmongo.net:27017/iqYj5uto';
 var connection = mongoose.connect(MONGOOSE_CONNECT);
 
@@ -117,7 +125,10 @@ var Api = (function () {
         /* Get Poll */
         socket.on('poll:get', function (data) {
 
+          console.log('poll:get', data);
+
           _this.db.findLastPollByUsername(data.username).then(function (poll) {
+            console.log('poll:get', poll);
             socket.emit('poll:get', poll);
           });
         });

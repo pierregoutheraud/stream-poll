@@ -17,6 +17,7 @@ var StreampollResults = React.createClass({
 
     // Mise a jour du poll, props --> state
     api.getPoll( this.props.params.username ).then((poll) => {
+      // console.log(poll);
       if (!poll) {
         console.log("No last poll");
         this.gotoCreate();

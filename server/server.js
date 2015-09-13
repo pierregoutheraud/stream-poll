@@ -20,7 +20,15 @@ let Database = require('./Database.js');
 const FILES_PATH = path.normalize(__dirname + '/files');
 const TEMP_PATH = path.normalize(__dirname + '/temp');
 
-let os_hostname = os.hostname();
+const os_hostname = os.hostname();
+
+mongoose.connection.on("open", function(ref) {
+  console.log("Connected to mongo server.");
+});
+
+mongoose.connection.on("error", function(err) {
+  console.err("Could not connect to mongo server!", err);
+});
 
 const MONGOOSE_CONNECT = 'mongodb://pierre:microst7@apollo.modulusmongo.net:27017/iqYj5uto';
 let connection = mongoose.connect(MONGOOSE_CONNECT);
@@ -103,7 +111,10 @@ class Api {
       /* Get Poll */
       socket.on('poll:get', (data) => {
 
+        console.log('poll:get', data);
+
         this.db.findLastPollByUsername(data.username).then((poll) => {
+          console.log('poll:get', poll);
           socket.emit('poll:get', poll);
         });
 
