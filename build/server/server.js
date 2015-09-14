@@ -248,11 +248,11 @@ var Api = (function () {
     key: 'removeUser',
     value: function removeUser(user) {
       if (typeof user === 'undefined') return false;
-      this.notifySubscribersOf(user, { connected: false });
       for (var i = 0, l = this.users.length; i < l; i++) {
         if (user.socket.id == this.users[i].socket.id) {
-          console.log('remove poll !', i);
+          console.log('remove user !', i);
           this.users.splice(i, 1);
+          this.notifySubscribersOf(user, { connected: false });
           break;
         }
       }
