@@ -175,7 +175,7 @@ var WidgetTwitchLive = React.createClass({
 
             <div className="popover__content__body">
 
-              <a href="" onClick={this.closePopover} className="popover__close" >skip</a>
+              <a href="" onClick={this.closePopover} className="popover__close" >no</a>
 
               <p>The streamer is currently not connected, are you {this.props.streamerUsername} ?</p>
               <a href="" onClick={this.signin} className="twitch-signin" >
