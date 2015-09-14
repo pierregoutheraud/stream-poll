@@ -194,15 +194,17 @@ var Layout = React.createClass({
         return;
       }
 
-      let widgetComponent;
+      let widgetComponent, loading = false;
       switch (widget.name) {
 
         case 'twitch-live':
           widgetComponent = <WidgetTwitchLive streamerUsername={this.props.params.username} />;
+          loading = true;
           break;
 
         case 'twitch-chat':
           widgetComponent = <WidgetTwitchChat streamerUsername={this.props.params.username} />;
+          loading = true;
           break;
 
         case 'streampoll':
@@ -225,6 +227,7 @@ var Layout = React.createClass({
           className={"widget--"+widget.name+" widget--iframe"}
           key={"widget"+i}
           i={i}
+          loading={loading}
           {...widgetsFunctions}
           {...widget}
           params={this.props.params}

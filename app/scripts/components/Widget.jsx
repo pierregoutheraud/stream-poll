@@ -1,4 +1,5 @@
 import React from 'react/addons';
+import Loading from 'pages/Loading.jsx';
 
 var Layout = React.createClass({
 
@@ -64,6 +65,11 @@ var Layout = React.createClass({
           </div>
         </header>
         { this.renderChildren() }
+        { this.props.loading ?
+        <div className="widget__loading">
+          <Loading absolute={true} >Loading widget...</Loading>
+        </div>
+        : null }
       </div>
     );
 
