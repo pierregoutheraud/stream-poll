@@ -8,6 +8,4 @@ if (CONFIG.ENV === 'dev') {
   CONFIG.SOCKET_ENDPOINT = 'https://streampoll.herokuapp.com';
 }
 
-console.log(CONFIG);
-
 export default CONFIG;

@@ -17,9 +17,7 @@ var StreampollResults = React.createClass({
 
     // Mise a jour du poll, props --> state
     api.getPoll( this.props.params.username ).then((poll) => {
-      // console.log(poll);
       if (!poll) {
-        console.log("No last poll");
         this.gotoCreate();
       } else {
         this.listenToPoll(poll);
@@ -32,8 +30,6 @@ var StreampollResults = React.createClass({
   listenToPoll: function(poll) {
 
     api.listenToPoll(poll._id, (dataOption) => {
-
-      console.log( 'listenToPoll', dataOption );
 
       let option = _.findWhere(this.state.poll.options, {_id:dataOption._id});
 

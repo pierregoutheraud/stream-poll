@@ -8,7 +8,7 @@ class Api {
   constructor () {
     this.socket = io.connect(CONFIG.SOCKET_ENDPOINT);
     this.socket.on('connect', () => {
-      console.log('Websocket connected !');
+      log('Websocket connected !');
     });
   }
 

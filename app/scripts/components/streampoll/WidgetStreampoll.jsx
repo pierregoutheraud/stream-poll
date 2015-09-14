@@ -29,8 +29,6 @@ var WidgetTwitchLive = React.createClass({
 
       api.listenToStreamer(user, this.props.params.username, (data) => {
 
-        console.log('listenToStreamer update', data);
-
         // update about poll
         if (typeof data.poll !== 'undefined') {
           if (data.poll) {

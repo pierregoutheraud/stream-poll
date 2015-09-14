@@ -76,7 +76,6 @@ var Layout = React.createClass({
       if (user.authenticated) {
 
         api.newUser( this.props.params.username ).then((user) => {
-          console.log('New user', user);
           this.setState({ loading: false });
         });
 
@@ -84,7 +83,6 @@ var Layout = React.createClass({
 
         // Create temporary user
         api.newUser( this.props.params.username ).then((user) => {
-          console.log('New user', user);
           this.setState({
             loading: false
           });
@@ -239,7 +237,6 @@ var Layout = React.createClass({
 
     });
 
-    // console.log(widgets);
     // if (!widgets.length) {
     //   widgets = (
     //     <p>Nope!</p>

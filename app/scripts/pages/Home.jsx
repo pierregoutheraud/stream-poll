@@ -109,7 +109,6 @@ var Home = React.createClass({
     let poll = this.state.polls[this.state.current];
 
     let winner = _.max(poll.options, function(option){ return option.votes; });
-    // console.log(maxVotes);
 
     poll.options.forEach((option,i)=>{
       if (option.currentVote < option.votes) option.currentVote += Math.floor((Math.random() * (winner.votes/30)) + 5);

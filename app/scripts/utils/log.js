@@ -3,7 +3,8 @@ import CONFIG from 'config/config.js'
 var log = function(){
 
   // if( CONFIG.ENV !== 'dev' || !CONFIG.DEBUG ) return false;
-  if( !CONFIG.DEBUG ) return false;
+  // if( !CONFIG.DEBUG ) return false;
+  if (CONFIG.ENV === 'prod') return false;
 
   var i = 0, type = 'debug', args = [];
   for (var key in arguments) {

@@ -73,8 +73,6 @@ var Home = React.createClass({
       username: user.username
     };
 
-    console.log(data.options);
-
     if (!data.question.length) {
       alert('Please, type a question.');
     } else if (data.options.length <= 1) {

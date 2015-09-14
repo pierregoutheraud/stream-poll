@@ -79,7 +79,6 @@ class TwitchSDK {
   checkIfLogged (status, streamerUsername) {
     return new Promise((resolve, reject) => {
       // Twitch.events.addListener('auth.login', function() {
-      //   console.log('user logged to twitch');
       //   resolve();
       // });
 
