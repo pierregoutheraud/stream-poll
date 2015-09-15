@@ -14,6 +14,8 @@ let locale = store.get('locale') || window.navigator.userLanguage || window.navi
 // Si on ne trouve pas le language --> locale = en
 let language = _.findWhere(languages, {locale: locale});
 
+console.log(language);
+
 // if (!store.get('locale')) {
 store.set('locale', locale)
 // }

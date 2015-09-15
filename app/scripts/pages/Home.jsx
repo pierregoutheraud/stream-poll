@@ -242,7 +242,7 @@ var Home = React.createClass({
                   <p>{ __("Give your opinion to your favorite streamer") }</p>
 
                   <div className="input-group">
-                    <input ref="streamerUsername" type="text" className="input" onKeyUp={this.onKeyUp} placeholder="streamer username"/>
+                    <input ref="streamerUsername" type="text" className="input" onKeyUp={this.onKeyUp} placeholder={__("streamer username", true)}/>
                     <button
                       type="button"
                       className="btn btn--black"

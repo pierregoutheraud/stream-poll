@@ -2,6 +2,7 @@ import React from 'react/addons';
 import api from 'utils/WebsocketApi.js';
 import CONFIG from 'config/config.js';
 import _ from 'underscore';
+import __ from 'utils/i18n.jsx';
 import Loading from 'pages/Loading.jsx';
 import user from 'Models/User.js';
 
@@ -55,7 +56,7 @@ var StreampollResults = React.createClass({
   render: function() {
 
     if (this.state.poll === null) {
-      return <Loading text="Fetching poll results..." />;
+      return <Loading>{ __("Fetching poll...") }</Loading>;
     }
 
     let totalVotes = 0;
@@ -109,7 +110,7 @@ var StreampollResults = React.createClass({
     if (user.streamer) {
       footer = (
         <footer>
-          <a href="" className="btn btn--black" onClick={this.gotoCreate} >create new poll</a>
+          <a href="" className="btn btn--black" onClick={this.gotoCreate} >{ __("create new poll") }</a>
         </footer>
       );
     }

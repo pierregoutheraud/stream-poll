@@ -219,7 +219,6 @@ class Api {
       console.log('subscriber ' + subscriber.socket.id + ' has been notified about', data);
       subscriber.socket.emit('streamer:update', data);
     });
-
   }
 
   newVote (poll_id, option) {

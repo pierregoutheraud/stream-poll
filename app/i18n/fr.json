@@ -13,7 +13,7 @@
   "Sign-in via Twitch and create polls for your viewers": "Connectez-vous avec Twitch et créer des sondages pour vos spectateurs",
   "You are a viewer": "Vous êtes un spectateur",
   "Give your opinion to your favorite streamer": "Donnez votre opinion à votre streamer préféré",
-  "Fetching streamer infos...": "Fetching streamer infos...",
+  "Fetching streamer infos...": "Récupération des infos du streamer...",
   "Ask a question to your viewers<br/>and find out what they think.": "Pose des questions à tes spectateurs et découvre ce qu'ils pensent",
   "<span>The streamer <strong>is connected</strong> but did not create any poll yet.</span>": "<span>Le streamer <strong>est connecté</strong> mais n'a pas encore créer de sondage.</span>",
   "<span>The streamer <strong>is not connected</strong> and did not create any poll yet.</span>": "<span>Le streamer <strong>n'est pas connecté</strong> et n'a pas encore créer de sondage.</span>",
@@ -27,5 +27,8 @@
   "Share this url with him and your friends:": "Partage cette url avec lui et tes amis:",
   "The streamer is currently not connected, are you": "Le streamer n'est actuellement pas connecté, êtes-vous",
   "voting...": "vote en cours...",
-  "results": "résultats"
+  "results": "résultats",
+  "create new poll": "créer un nouveau sondage",
+  "Fetching poll...": "Récupération du sondage...",
+  "streamer username": "pseudo du streamer"
 }
