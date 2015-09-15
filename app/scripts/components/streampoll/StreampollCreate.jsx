@@ -82,7 +82,7 @@ var Home = React.createClass({
 
       this.setState({ creating: true });
       api.postPoll(data).then((poll) => {
-        // this.transitionTo('/' + this.props.params.username + '/' + poll._id);
+        // this.transitionTo('/' + this.props.streamerUsername + '/' + poll._id);
         this.props.gotoVote( poll );
       });
 
@@ -116,7 +116,9 @@ var Home = React.createClass({
       onClickSubmit = null;
     }
 
-    let currentURL = window.location.origin + "/" + this.props.params.username;
+    console.log(this.props);
+
+    let currentURL = window.location.origin + "/" + this.props.streamerUsername;
 
     return (
 

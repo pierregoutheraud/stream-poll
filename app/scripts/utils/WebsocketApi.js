@@ -65,7 +65,7 @@ class Api {
 
   emit (eventName, data={}) {
     return new Promise((resolve, reject) => {
-      console.log('WebsocketApi emit', eventName, data);
+      log('WebsocketApi emit', eventName, data);
       this.socket.emit(eventName, data);
       this.socket.on(eventName, function(data) {
         resolve(data);

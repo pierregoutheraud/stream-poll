@@ -28,7 +28,7 @@ var WidgetTwitchLive = React.createClass({
 
     if (!user.isCurrentStreamer(this.props.streamerUsername)) {
 
-      api.listenToStreamer(user, this.props.params.username, (data) => {
+      api.listenToStreamer(user, this.props.streamerUsername, (data) => {
 
         // update about poll
         if (typeof data.poll !== 'undefined') {
@@ -107,7 +107,7 @@ var WidgetTwitchLive = React.createClass({
     switch (this.state.current) {
       case 'waiting':
 
-        let connect, currentURL = window.location.origin + "/" + this.props.params.username;
+        let connect, currentURL = window.location.origin + "/" + this.props.streamerUsername;
         if (this.state.streamerConnected) {
           connect = __("<span>The streamer <strong>is connected</strong> but did not create any poll yet.</span>")
         }
@@ -132,7 +132,7 @@ var WidgetTwitchLive = React.createClass({
       case 'create':
         content = (
           <StreampollCreate
-            params={this.props.params}
+            streamerUsername={this.props.streamerUsername}
             gotoVote={this.gotoVote}
           />
         );
@@ -141,7 +141,7 @@ var WidgetTwitchLive = React.createClass({
       case 'vote':
         content = (
           <StreampollVote
-            params={this.props.params}
+            streamerUsername={this.props.streamerUsername}
             poll={this.state.poll}
             gotoResults={this.gotoResults}
           />
@@ -151,7 +151,7 @@ var WidgetTwitchLive = React.createClass({
       case 'results':
         content = (
           <StreampollResults
-            params={this.props.params}
+            streamerUsername={this.props.streamerUsername}
             poll={this.state.poll}
             gotoCreate={this.gotoCreate}
           />

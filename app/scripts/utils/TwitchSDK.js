@@ -53,9 +53,9 @@ class TwitchSDK {
       user.authenticated = true;
       Twitch.api({method: '/user', verb: 'GET' }, (error, res) => {
         if (error) console.error( error );
-        let { _id, display_name, logo } = res;
-        user.streamer = display_name === streamerUsername;
-        user.username = display_name;
+        let { _id, name, logo } = res;
+        user.streamer = name === streamerUsername;
+        user.username = name;
         user.logo = logo;
         user.id = _id;
         resolve(user);
@@ -65,7 +65,7 @@ class TwitchSDK {
 
   signin (login_redirect=null) {
 
-    if (login_redirect === null) login_redirect = window.location.pathname;
+    if (login_redirect === null) login_redirect = window.location.pathname.toLowerCase();
     store.set('login_redirect', login_redirect);
     Twitch.login({
       // scope: ['user_read', 'channel_read']

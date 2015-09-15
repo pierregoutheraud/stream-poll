@@ -61,6 +61,7 @@ var Layout = React.createClass({
     ];
 
     return {
+      streamerUsername: this.props.params.username.toLowerCase(),
       widgets: widgets,
       loading: true
     };
@@ -71,18 +72,18 @@ var Layout = React.createClass({
     this.dragula = false;
 
     // Twitch Auth
-    TwitchSDK.auth( this.props.params.username ).then((user) => {
+    TwitchSDK.auth( this.state.streamerUsername ).then((user) => {
 
       if (user.authenticated) {
 
-        api.newUser( this.props.params.username ).then((user) => {
+        api.newUser( this.state.streamerUsername ).then((user) => {
           this.setState({ loading: false });
         });
 
       } else {
 
         // Create temporary user
-        api.newUser( this.props.params.username ).then((user) => {
+        api.newUser( this.state.streamerUsername ).then((user) => {
           this.setState({
             loading: false
           });
@@ -196,21 +197,21 @@ var Layout = React.createClass({
       switch (widget.name) {
 
         case 'twitch-live':
-          widgetComponent = <WidgetTwitchLive streamerUsername={this.props.params.username} />;
+          widgetComponent = <WidgetTwitchLive streamerUsername={this.state.streamerUsername} />;
           loading = true;
           break;
 
         case 'twitch-chat':
-          widgetComponent = <WidgetTwitchChat streamerUsername={this.props.params.username} />;
+          widgetComponent = <WidgetTwitchChat streamerUsername={this.state.streamerUsername} />;
           loading = true;
           break;
 
         case 'streampoll':
-          widgetComponent = <WidgetStreampoll signin={this.signin} streamerUsername={this.props.params.username} />;
+          widgetComponent = <WidgetStreampoll signin={this.signin} streamerUsername={this.state.streamerUsername} />;
           break;
 
         case 'twitter-feed':
-          widgetComponent = <WidgetTwitterFeed streamerUsername={this.props.params.username} />;
+          widgetComponent = <WidgetTwitterFeed streamerUsername={this.state.streamerUsername} />;
           break;
 
         case 'google':
@@ -226,9 +227,9 @@ var Layout = React.createClass({
           key={"widget"+i}
           i={i}
           loading={loading}
+          streamerUsername={this.state.streamerUsername}
           {...widgetsFunctions}
           {...widget}
-          params={this.props.params}
         >
           { widgetComponent }
         </Widget>
