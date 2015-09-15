@@ -4,6 +4,7 @@ import { Link, Router, Navigation } from 'react-router';
 import TwitchSDK from 'utils/TwitchSDK.js';
 import user from 'Models/User.js';
 import _ from 'underscore';
+import __ from 'utils/i18n.jsx';
 
 let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
@@ -15,7 +16,7 @@ var Home = React.createClass({
 
     let polls = [
       {
-        question: 'What game should I play next ?',
+        question: __('What game should I play next ?'),
         options: [
           {
             value: 'League of Legends',
@@ -35,7 +36,7 @@ var Home = React.createClass({
         ],
       },
       {
-        question: 'Is that guy cheating?',
+        question: __('Is that guy cheating?'),
         options: [
           {
             value: 'Yes',
@@ -50,20 +51,20 @@ var Home = React.createClass({
         ]
       },
       {
-        question: 'Which weapon should I use ?',
+        question: __('Which weapon should I use ?'),
         options: [
           {
-            value: 'Magic hat',
+            value: __('Magic hat'),
             currentVote: 0,
             votes: 145
           },
           {
-            value: 'Sword',
+            value: __('Sword'),
             currentVote: 0,
             votes: 112
           },
           {
-            value: 'Rope',
+            value: __('Rope'),
             currentVote: 0,
             votes: 22
           }
@@ -213,7 +214,7 @@ var Home = React.createClass({
 
         <header className="home__header">
           <Link to={"/"} className="logo" ><span>beta</span></Link>
-          <p>Ask questions to your viewers and find out what they think</p>
+          <p>{ __("Ask questions to your viewers and find out what they think") }</p>
           <div className="home__header__results">
             <ReactCSSTransitionGroup transitionName="widget" transitionAppear={true} >
               { polls }
@@ -227,8 +228,8 @@ var Home = React.createClass({
 
               <div className="home__col">
                 <div className="home__col__content">
-                <h2>You are a streamer</h2>
-                <p>Sign-in via Twitch and create polls for your viewers</p>
+                <h2>{ __("You are a streamer") }</h2>
+                <p>{ __("Sign-in via Twitch and create polls for your viewers") }</p>
                 <a href="" onClick={this.signin} className="twitch-signin" >
                   <img src='https://camo.githubusercontent.com/e3dadf5d1f371961805e6843fc7d9d611a1d14b5/687474703a2f2f7474762d6170692e73332e616d617a6f6e6177732e636f6d2f6173736574732f636f6e6e6563745f6461726b2e706e67'/>
                 </a>
@@ -237,8 +238,8 @@ var Home = React.createClass({
 
               <div className="home__col">
                 <div className="home__col__content">
-                  <h2>You are a viewer</h2>
-                  <p>Give your opinion to your favorite streamer</p>
+                  <h2>{ __("You are a viewer") }</h2>
+                  <p>{ __("Give your opinion to your favorite streamer") }</p>
 
                   <div className="input-group">
                     <input ref="streamerUsername" type="text" className="input" onKeyUp={this.onKeyUp} placeholder="streamer username"/>

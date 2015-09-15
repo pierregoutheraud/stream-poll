@@ -4,6 +4,7 @@ import api from 'utils/WebsocketApi.js';
 import user from 'Models/User.js';
 import TwitchSDK from 'utils/TwitchSDK.js';
 import Loading from 'pages/Loading.jsx';
+import __ from 'utils/i18n.jsx';
 
 import StreampollCreate from 'components/streampoll/StreampollCreate.jsx';
 import StreampollVote from 'components/streampoll/StreampollVote.jsx';
@@ -98,7 +99,7 @@ var WidgetTwitchLive = React.createClass({
   render: function() {
 
     if (this.state.loading || this.state.current === null) {
-      return <Loading text="Fetching streamer infos..."/>;
+      return <Loading text={ __("Fetching streamer infos...") } />;
     }
 
     let content;
@@ -108,20 +109,19 @@ var WidgetTwitchLive = React.createClass({
 
         let connect, currentURL = window.location.origin + "/" + this.props.params.username;
         if (this.state.streamerConnected) {
-          connect = <span>The streamer <strong>is connected</strong> but did not create any poll yet.</span>;
+          connect = __("<span>The streamer <strong>is connected</strong> but did not create any poll yet.</span>")
         }
         else {
-          connect = <span>The streamer <strong>is not connected</strong> and did not create any poll yet.</span>;
+          connect = __("<span>The streamer <strong>is not connected</strong> and did not create any poll yet.</span>")
         }
 
         content = (
           <div className="stream-poll__waiting">
             <p>
               {connect} <br/>
-              Share this url with him and your friends: <a href={currentURL} className="link link--green" >{currentURL}</a>
-              <br/>
+            { __("Share this url with him and your friends:") } <a href={currentURL} className="link link--green" >{currentURL}</a>
             </p>
-            <p>Are you {this.props.streamerUsername} ?</p>
+            <p>{ __("Are you") } {this.props.streamerUsername} ?</p>
             <a href="" onClick={this.signin} className="twitch-signin" >
               <img src='https://camo.githubusercontent.com/e3dadf5d1f371961805e6843fc7d9d611a1d14b5/687474703a2f2f7474762d6170692e73332e616d617a6f6e6177732e636f6d2f6173736574732f636f6e6e6563745f6461726b2e706e67'/>
             </a>
@@ -175,9 +175,9 @@ var WidgetTwitchLive = React.createClass({
 
             <div className="popover__content__body">
 
-              <a href="" onClick={this.closePopover} className="popover__close" >no</a>
+              <a href="" onClick={this.closePopover} className="popover__close" >{ __("no") }</a>
 
-              <p>The streamer is currently not connected, are you {this.props.streamerUsername} ?</p>
+              <p>{ __("The streamer is currently not connected, are you") } {this.props.streamerUsername} ?</p>
               <a href="" onClick={this.signin} className="twitch-signin" >
                 <img src='https://camo.githubusercontent.com/e3dadf5d1f371961805e6843fc7d9d611a1d14b5/687474703a2f2f7474762d6170692e73332e616d617a6f6e6177732e636f6d2f6173736574732f636f6e6e6563745f6461726b2e706e67'/>
               </a>
@@ -190,7 +190,7 @@ var WidgetTwitchLive = React.createClass({
 
 
         <header className="logo-header" >
-         <Link to={"/"} className="logo" ></Link>
+          <Link to={"/"} className="logo" ></Link>
         </header>
         <div className="widget--streampoll__main">
           { content }

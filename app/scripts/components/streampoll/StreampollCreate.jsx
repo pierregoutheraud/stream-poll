@@ -3,6 +3,7 @@ import api from 'utils/WebsocketApi.js';
 import CONFIG from 'config/config.js';
 import { Link, Router, Navigation } from 'react-router';
 import user from 'Models/User.js';
+import __ from 'utils/i18n.jsx';
 
 var Home = React.createClass({
 
@@ -98,7 +99,7 @@ var Home = React.createClass({
           <input
             className="option__input input"
             ref={"option"+i}
-            placeholder="Type an option here"
+            placeholder={__("Type an option here", true)}
             type="text"
             value={value}
             onChange={this.onChangeOption.bind(this,i)}
@@ -109,9 +110,9 @@ var Home = React.createClass({
       );
     });
 
-    let submitText = 'create poll', onClickSubmit = this.send;
+    let submitText = __('create poll'), onClickSubmit = this.send;
     if (this.state.creating) {
-      submitText = 'creating poll...'
+      submitText = __('creating poll...')
       onClickSubmit = null;
     }
 
@@ -121,14 +122,14 @@ var Home = React.createClass({
 
       <div className="create">
 
-        <h1>Ask a question to your viewers<br/>and find out what they think.</h1>
+        <h1>{ __("Ask a question to your viewers<br/>and find out what they think.") }</h1>
         <p className="advice" >
-          This poll and your next ones are available here: <a href={currentURL} className="link link--green" >{currentURL}</a>
-        <br/>Share it with your viewers!
+          { __("This poll and your next ones are available here:") } <a href={currentURL} className="link link--green" >{currentURL}</a>
+        <br/>{ __("Share it with your viewers!") }
         </p>
 
           <textarea
-            placeholder="Type your question here"
+            placeholder={__("Type your question here", true)}
             type="text"
             ref="question"
             onChange={this.onChangeQuestion}

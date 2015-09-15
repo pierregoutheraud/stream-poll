@@ -4,6 +4,7 @@ import api from 'utils/WebsocketApi.js';
 import Loading from 'pages/Loading.jsx';
 import user from 'Models/User.js';
 import _ from 'underscore';
+import __ from 'utils/i18n.jsx';
 import store from 'store';
 
 let StreampollVote = React.createClass({
@@ -135,7 +136,7 @@ let StreampollVote = React.createClass({
 
     let voteText = 'vote', onClickVote = this.vote;
     if (this.state.voting) {
-      voteText = 'voting...'
+      voteText = __('voting...')
       onClickVote = null;
     }
 
@@ -155,7 +156,7 @@ let StreampollVote = React.createClass({
 
         <footer>
           <button type="submit" className="btn btn--green" onClick={onClickVote} >{voteText}</button>
-          <a href="" className="btn btn--black" onClick={this.gotoResults} >results</a>
+          <a href="" className="btn btn--black" onClick={this.gotoResults} >{ __("results") }</a>
         </footer>
 
       </div>
