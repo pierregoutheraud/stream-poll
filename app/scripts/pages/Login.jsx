@@ -14,7 +14,7 @@ var Layout = React.createClass({
     let login_redirect = store.get('login_redirect');
 
     if (login_redirect === '/') {
-      TwitchSDK.auth( this.props.params.username.toLowerCase() ).then((user) => {
+      TwitchSDK.auth().then((user) => {
         login_redirect = '/' + user.username;
         this.transitionTo(login_redirect);
       });

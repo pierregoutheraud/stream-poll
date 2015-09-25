@@ -31,6 +31,7 @@ class Api {
   }
 
   newUser ( streamerUsername ) {
+    user.streamer = streamerUsername === user.username; // Check if user is streamer
     let data = {
       id: user.id,
       username: user.username,

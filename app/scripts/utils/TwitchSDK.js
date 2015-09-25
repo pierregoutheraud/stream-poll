@@ -21,7 +21,7 @@ class TwitchSDK {
 
   }
 
-  auth (streamerUsername) {
+  auth () {
 
     return new Promise((resolve, reject) => {
 
@@ -37,7 +37,7 @@ class TwitchSDK {
           let twitch_oauth_session = window.sessionStorage.getItem('twitch_oauth_session');
           store.set('twitch_oauth_session', JSON.parse(twitch_oauth_session));
 
-          resolve(this.getUserInfos(streamerUsername));
+          resolve(this.getUserInfos());
         } else {
           resolve(user);
         }
@@ -48,13 +48,12 @@ class TwitchSDK {
 
   }
 
-  getUserInfos (streamerUsername) {
+  getUserInfos () {
     return new Promise((resolve, reject) => {
       user.authenticated = true;
       Twitch.api({method: '/user', verb: 'GET' }, (error, res) => {
         if (error) console.error( error );
         let { _id, name, logo } = res;
-        user.streamer = name === streamerUsername;
         user.username = name;
         user.logo = logo;
         user.id = _id;

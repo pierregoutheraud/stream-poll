@@ -72,7 +72,7 @@ var Layout = React.createClass({
     this.dragula = false;
 
     // Twitch Auth
-    TwitchSDK.auth( this.state.streamerUsername ).then((user) => {
+    TwitchSDK.auth().then((user) => {
 
       if (user.authenticated) {
 
