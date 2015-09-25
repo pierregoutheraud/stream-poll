@@ -74,22 +74,9 @@ var Layout = React.createClass({
     // Twitch Auth
     TwitchSDK.auth().then((user) => {
 
-      if (user.authenticated) {
-
-        api.newUser( this.state.streamerUsername ).then((user) => {
-          this.setState({ loading: false });
-        });
-
-      } else {
-
-        // Create temporary user
-        api.newUser( this.state.streamerUsername ).then((user) => {
-          this.setState({
-            loading: false
-          });
-        });
-
-      }
+      api.newUser( this.state.streamerUsername ).then((user) => {
+        this.setState({ loading: false });
+      });
 
     });
 
